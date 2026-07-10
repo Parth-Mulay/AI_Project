@@ -1,108 +1,64 @@
 """
-Export service module for AI Meeting Notes Manager.
+Service for exporting meeting notes to various formats.
 
-This module provides the ExportService class for exporting
-meeting data to various formats (PDF, Markdown, DOCX).
+Supports Markdown export with professional formatting.
 """
 
-from typing import Optional
-from models.meeting import Meeting
-from utils.logger import app_logger
-from utils.file_handler import save_file
+import os
+from pathlib import Path
+from datetime import datetime
+from models.meeting_model import Meeting
 
 
 class ExportService:
     """
-    Service class for exporting meeting data to various formats.
+    Service for exporting meeting notes to files.
 
-    Supports PDF, Markdown, and DOCX export formats.
+    Generates professional Markdown files with meeting content.
     """
 
-    def __init__(self):
-        """Initialize the ExportService."""
-        self.supported_formats = ["markdown", "pdf", "docx"]
-        app_logger.info("ExportService initialized")
+    DEFAULT_EXPORT_DIR = "meeting_notes"
 
-    def export_to_markdown(self, meeting: Meeting, file_path: str) -> bool:
+    def __init__(self, export_dir: str = None):
         """
-        Export meeting to Markdown format.
+        Initialize the export service.
+
+        Args:
+            export_dir: Directory to export meeting files to
+        """
+        self.export_dir = export_dir or self.DEFAULT_EXPORT_DIR
+        self._ensure_export_dir()
+
+    def _ensure_export_dir(self) -> None:
+        """Create export directory if it doesn't exist."""
+        Path(self.export_dir).mkdir(parents=True, exist_ok=True)
+
+    def export_to_markdown(self, meeting: Meeting) -> str:
+        """
+        Export meeting to Markdown file.
 
         Args:
             meeting: Meeting instance to export
-            file_path: Output file path
 
         Returns:
-            True if successful, False otherwise
+            Path to the created file
         """
-        app_logger.info(f"Exporting meeting to Markdown: {file_path}")
+        # Generate filename
+        timestamp = meeting.created_at.strftime("%Y%m%d_%H%M%S")
+        filename = f"{meeting.title.replace(' ', '_')}_{timestamp}.md"
+        filepath = os.path.join(self.export_dir, filename)
 
-        # Placeholder implementation
-        markdown_content = self._generate_markdown(meeting)
+        # Generate content
+        content = self._generate_markdown_content(meeting)
 
-        return save_file(file_path, markdown_content)
+        # Write to file
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
 
-    def export_to_pdf(self, meeting: Meeting, file_path: str) -> bool:
-        """
-        Export meeting to PDF format.
+        return filepath
 
-        Args:
-            meeting: Meeting instance to export
-            file_path: Output file path
-
-        Returns:
-            True if successful, False otherwise
-        """
-        app_logger.info(f"Exporting meeting to PDF: {file_path}")
-
-        # Placeholder implementation
-        # In the full implementation, this will use a PDF library
-        app_logger.info("PDF export: placeholder implementation - full implementation coming")
-
-        return True
-
-    def export_to_docx(self, meeting: Meeting, file_path: str) -> bool:
-        """
-        Export meeting to DOCX format.
-
-        Args:
-            meeting: Meeting instance to export
-            file_path: Output file path
-
-        Returns:
-            True if successful, False otherwise
-        """
-        app_logger.info(f"Exporting meeting to DOCX: {file_path}")
-
-        # Placeholder implementation
-        # In the full implementation, this will use python-docx library
-        app_logger.info("DOCX export: placeholder implementation - full implementation coming")
-
-        return True
-
-    def export_to_json(self, meeting: Meeting, file_path: str) -> bool:
-        """
-        Export meeting to JSON format.
-
-        Args:
-            meeting: Meeting instance to export
-            file_path: Output file path
-
-        Returns:
-            True if successful, False otherwise
-        """
-        app_logger.info(f"Exporting meeting to JSON: {file_path}")
-
-        import json
-        try:
-            with open(file_path, 'w', encoding='utf-8') as f:
-                json.dump(meeting.to_dict(), f, indent=2)
-            app_logger.info(f"JSON export completed: {file_path}")
-            return True
-        except Exception as e:
-            app_logger.error(f"JSON export failed: {e}")
-            return False
-
-    def _generate_markdown(self, meeting: Meeting) -> str:
+    @staticmethod
+    def _generate_markdown_content(meeting: Meeting) -> str:
         """
         Generate Markdown content for a meeting.
 
@@ -112,51 +68,78 @@ class ExportService:
         Returns:
             Markdown formatted content
         """
-        markdown = f"""# {meeting.title}
+        content = ""
 
-**Date:** {meeting.date.strftime('%Y-%m-%d %H:%M:%S')}
-**Duration:** {meeting.duration_minutes} minutes
-**Participants:** {', '.join(meeting.participants) if meeting.participants else 'None listed'}
+        # Title
+        content += f"# {meeting.title}\n\n"
 
-## Summary
+        # Metadata
+        content += f"**Date:** {meeting.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        content += f"**Duration:** {meeting.get_duration()}\n"
+        content += f"**Participants:** {', '.join(meeting.participants)}\n\n"
 
-{meeting.summary if meeting.summary else 'No summary available'}
-
-## Transcript
-
-{meeting.transcript if meeting.transcript else 'No transcript available'}
-
-## Action Items
-
-"""
-
-        if meeting.action_items:
-            for item in meeting.action_items:
-                markdown += f"- {item}\n"
+        # Summary
+        content += "## Summary\n\n"
+        if meeting.action_items or meeting.decisions or meeting.important_notes:
+            content += "Meeting focused on:\n\n"
+            if meeting.action_items:
+                content += f"- {len(meeting.action_items)} action items identified\n"
+            if meeting.decisions:
+                content += f"- {len(meeting.decisions)} key decisions made\n"
+            if meeting.important_notes:
+                content += f"- {len(meeting.important_notes)} important notes captured\n"
+            content += "\n"
         else:
-            markdown += "No action items identified\n"
+            content += "General meeting discussion.\n\n"
 
-        markdown += f"\n---\n*Generated by AI Meeting Notes Manager*\n"
+        # Participants section
+        content += "## Participants\n\n"
+        for participant in meeting.participants:
+            content += f"- {participant}\n"
+        content += "\n"
 
-        return markdown
+        # Transcript
+        if meeting.messages:
+            content += "## Meeting Transcript\n\n"
+            for message in meeting.messages:
+                content += f"**{message.speaker}:** {message.content}\n\n"
 
-    def is_format_supported(self, format_name: str) -> bool:
-        """
-        Check if an export format is supported.
+        # Action Items
+        if meeting.action_items:
+            content += "## Action Items\n\n"
+            for item in meeting.action_items:
+                due = f" (Due: {item.due_date})" if item.due_date else ""
+                assigned = f" - {item.assigned_to}" if item.assigned_to != "Unassigned" else ""
+                content += f"- [ ] {item.description}{due}{assigned}\n"
+            content += "\n"
 
-        Args:
-            format_name: Format name (markdown, pdf, docx)
+        # Decisions
+        if meeting.decisions:
+            content += "## Decisions\n\n"
+            for decision in meeting.decisions:
+                content += f"- {decision.description}\n"
+            content += "\n"
 
-        Returns:
-            True if supported, False otherwise
-        """
-        return format_name.lower() in self.supported_formats
+        # Important Notes
+        if meeting.important_notes:
+            content += "## Important Notes\n\n"
+            for note in meeting.important_notes:
+                category = f"[{note.category.upper()}]" if note.category else ""
+                content += f"- {category} {note.description}\n"
+            content += "\n"
 
-    def get_supported_formats(self) -> list:
-        """
-        Get list of supported export formats.
+        # Statistics
+        content += "## Statistics\n\n"
+        content += f"- **Total Messages:** {len(meeting.messages)}\n"
+        content += f"- **Action Items:** {len(meeting.action_items)}\n"
+        content += f"- **Decisions:** {len(meeting.decisions)}\n"
+        content += f"- **Important Notes:** {len(meeting.important_notes)}\n"
+        content += f"- **Duration:** {meeting.get_duration()}\n"
+        content += f"- **Exported:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
-        Returns:
-            List of supported formats
-        """
-        return self.supported_formats.copy()
+        # Footer
+        content += "---\n"
+        content += "*Generated by AI Meeting Notes Manager*\n"
+
+        return content
+

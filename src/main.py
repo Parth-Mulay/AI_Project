@@ -1,10 +1,7 @@
 """
-Entry point for AI Meeting Notes Manager application.
+Entry point for the AI Meeting Notes Manager application.
 
-This is the main script that starts the application and demonstrates
-the initialized architecture.
-
-Run with: python main.py
+Run with: python src/main.py
 """
 
 import sys
@@ -13,33 +10,22 @@ import os
 # Add src directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
-from app import MeetingNotesManager
+from app import MeetingNotesApp
 
 
 def main():
-    """Main function to start the application."""
+    """Main entry point."""
     try:
-        # Create and start the application
-        manager = MeetingNotesManager()
-        manager.start()
-
-        # Display service status
-        print("\nService Status:")
-        status = manager.get_service_status()
-        for service, state in status.items():
-            print(f"  • {service}: {state}")
-
-        # Optional: Uncomment to test meeting creation
-        # meeting = manager.meeting_service.create_meeting(
-        #     title="Team Standup",
-        #     participants=["Alice", "Bob", "Charlie"]
-        # )
-        # print(f"\nTest meeting created: {meeting}")
-
+        app = MeetingNotesApp()
+        app.start()
+    except KeyboardInterrupt:
+        print("\n\nApplication interrupted by user.")
+        sys.exit(0)
     except Exception as e:
-        print(f"Error starting application: {e}")
+        print(f"Error: {e}")
         sys.exit(1)
 
 
 if __name__ == "__main__":
     main()
+

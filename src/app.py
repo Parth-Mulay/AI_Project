@@ -1,111 +1,166 @@
 """
-Main application module for AI Meeting Notes Manager.
+Main application class for the Meeting Notes Manager.
 
-This module contains the core MeetingNotesManager class that orchestrates
-all the major components of the application.
+Orchestrates the meeting workflow and user interaction.
 """
 
-from utils.logger import app_logger
-from services.meeting_service import MeetingService
+from typing import Optional
+from models.meeting_model import Meeting
+from services.detection_service import DetectionService, SummarizationService
 from services.export_service import ExportService
-from audio.transcriber import AudioTranscriber
-from ai.summarizer import MeetingSummarizer
-from ai.action_items import ActionItemExtractor
-import config
+from utils.formatter import ConsoleFormatter, print_header, print_subheader, print_section, print_success, print_ai_insight
 
 
-class MeetingNotesManager:
+class MeetingNotesApp:
     """
-    Main application class for AI Meeting Notes Manager.
+    Main application class for managing meeting notes.
 
-    Orchestrates all major components including transcription,
-    summarization, action item extraction, and export services.
+    Handles the complete workflow from meeting creation to export.
     """
 
     def __init__(self):
-        """Initialize the MeetingNotesManager application."""
-        app_logger.info("=" * 50)
-        app_logger.info("AI Meeting Notes Manager")
-        app_logger.info(f"Version: {config.PROJECT_VERSION}")
-        app_logger.info(f"Author: {config.PROJECT_AUTHOR}")
-        app_logger.info("=" * 50)
-
-        # Initialize core services
-        self.meeting_service = MeetingService()
+        """Initialize the application."""
+        self.current_meeting: Optional[Meeting] = None
+        self.detection_service = DetectionService()
         self.export_service = ExportService()
-        self.audio_transcriber = AudioTranscriber()
-        self.summarizer = MeetingSummarizer()
-        self.action_extractor = ActionItemExtractor()
-
-        app_logger.info("All services initialized successfully")
 
     def start(self) -> None:
-        """
-        Start the application and display initialization message.
+        """Start the application and run the main workflow."""
+        self._display_welcome()
+        self._start_new_meeting()
+        self._collect_meeting_notes()
+        self._display_meeting_summary()
+        self._export_meeting()
+        self._display_closing()
 
-        This method is called when the application starts and displays
-        a professional startup message indicating the architecture is ready.
-        """
-        self._display_startup_message()
-        app_logger.info("Application started and ready for use")
+    def _display_welcome(self) -> None:
+        """Display welcome message."""
+        print(ConsoleFormatter.header("AI Meeting Notes Manager"))
+        print(ConsoleFormatter.color_text(
+            "Intelligent meeting assistant powered by AI\n",
+            "blue"
+        ))
 
-    def _display_startup_message(self) -> None:
-        """Display the startup message with architecture status."""
-        startup_message = f"""
-{'=' * 60}
+    def _start_new_meeting(self) -> None:
+        """Get meeting details and start a new meeting."""
+        print(ConsoleFormatter.subheader("Meeting Setup"))
 
-{'AI MEETING NOTES MANAGER'.center(60)}
+        # Get meeting title
+        title = input("Enter Meeting Title: ").strip()
+        while not title:
+            print("Meeting title cannot be empty.")
+            title = input("Enter Meeting Title: ").strip()
 
-Architecture Initialized Successfully
+        # Get participants
+        participants_input = input("Enter Participants (comma separated): ").strip()
+        participants = [p.strip() for p in participants_input.split(",") if p.strip()]
 
-Day 3 Product Thinking Completed
+        if not participants:
+            participants = ["Unknown"]
 
-{'=' * 60}
+        # Create meeting
+        self.current_meeting = Meeting(title, participants)
+        print_success("Meeting Started Successfully")
+        print(f"\n{ConsoleFormatter.NOTEPAD} Title: {title}")
+        print(f"{ConsoleFormatter.PEOPLE} Participants: {', '.join(participants)}\n")
 
-Initialized Modules:
+    def _collect_meeting_notes(self) -> None:
+        """Collect meeting notes from user input."""
+        print(ConsoleFormatter.section("Live Meeting Notes"))
+        print("Enter meeting conversations (type 'end' to finish):\n")
 
-✓ Audio Processing (Transcriber)
-✓ AI Summarization (MeetingSummarizer)
-✓ Action Item Extraction (ActionItemExtractor)
-✓ Meeting Management (MeetingService)
-✓ Export Services (PDF, Markdown, DOCX)
-✓ Logging & Utilities
+        message_count = 0
 
-{'=' * 60}
+        while True:
+            line = input()
 
-Status: Ready for Development
+            if line.lower().strip() == "end":
+                break
 
-Version: {config.PROJECT_VERSION}
-Author: {config.PROJECT_AUTHOR}
+            if not line.strip():
+                continue
 
-Project: {config.PROJECT_DESCRIPTION}
+            message_count += 1
 
-{'=' * 60}
-"""
-        print(startup_message)
-        app_logger.info("Startup message displayed")
+            # Process the message and detect insights
+            insight = self.detection_service.process_message(self.current_meeting, line)
 
-    def get_service_status(self) -> dict:
-        """
-        Get the status of all services.
+            # Display AI insight if detected
+            if insight["type"] == "action":
+                print_ai_insight("Action Item")
+            elif insight["type"] == "decision":
+                print_ai_insight("Decision")
+            elif insight["type"] == "note":
+                print_ai_insight("Important Note")
 
-        Returns:
-            Dictionary containing the status of each service
-        """
-        return {
-            "project_name": config.PROJECT_NAME,
-            "version": config.PROJECT_VERSION,
-            "author": config.PROJECT_AUTHOR,
-            "meeting_service": "active",
-            "export_service": "active",
-            "audio_transcriber": "active",
-            "summarizer": "active",
-            "action_extractor": "active"
-        }
+        print_success(f"\nMeeting Ended - {message_count} messages recorded\n")
 
-    def shutdown(self) -> None:
-        """Gracefully shutdown the application."""
-        app_logger.info("Shutting down AI Meeting Notes Manager")
-        print("\nAI Meeting Notes Manager shutting down...")
-        app_logger.info("=" * 50)
-        app_logger.info("Application closed")
+    def _display_meeting_summary(self) -> None:
+        """Display comprehensive meeting summary."""
+        print(ConsoleFormatter.section("Meeting Summary"))
+
+        # Generate and display summary
+        summary = SummarizationService.generate_summary(self.current_meeting)
+        print(summary)
+
+        # Display action items
+        print(ConsoleFormatter.section("Action Items"))
+        if self.current_meeting.action_items:
+            for item in self.current_meeting.action_items:
+                print(ConsoleFormatter.action_item(str(item)))
+        else:
+            print("No action items identified.")
+
+        # Display decisions
+        print(ConsoleFormatter.section("Decisions Made"))
+        if self.current_meeting.decisions:
+            for decision in self.current_meeting.decisions:
+                print(ConsoleFormatter.decision(str(decision)))
+        else:
+            print("No decisions recorded.")
+
+        # Display important notes
+        print(ConsoleFormatter.section("Important Notes"))
+        if self.current_meeting.important_notes:
+            for note in self.current_meeting.important_notes:
+                print(ConsoleFormatter.note(
+                    str(note),
+                    note.category
+                ))
+        else:
+            print("No important notes.")
+
+        # Display statistics
+        print(ConsoleFormatter.section("Meeting Statistics"))
+        self._display_statistics()
+
+    def _display_statistics(self) -> None:
+        """Display meeting statistics."""
+        meeting = self.current_meeting
+
+        print(f"{ConsoleFormatter.DOCUMENT} Meeting Title: {meeting.title}")
+        print(f"{ConsoleFormatter.PEOPLE} Participants: {len(meeting.participants)}")
+        print(f"  {', '.join(meeting.participants)}")
+        print(f"\n{ConsoleFormatter.NOTEPAD} Total Messages: {len(meeting.messages)}")
+        print(f"{ConsoleFormatter.TARGET} Action Items Found: {len(meeting.action_items)}")
+        print(f"{ConsoleFormatter.CHECKMARK} Decisions Found: {len(meeting.decisions)}")
+        print(f"{ConsoleFormatter.WARNING} Important Notes: {len(meeting.important_notes)}")
+        print(f"\n{ConsoleFormatter.CLOCK} Duration: {meeting.get_duration()}")
+        print(f"{ConsoleFormatter.CLOCK} Timestamp: {meeting.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
+
+    def _export_meeting(self) -> None:
+        """Export meeting notes to file."""
+        print(ConsoleFormatter.section("Export"))
+
+        try:
+            filepath = self.export_service.export_to_markdown(self.current_meeting)
+            print_success(f"Meeting exported to: {filepath}")
+        except Exception as e:
+            print(f"Error exporting meeting: {e}")
+
+    def _display_closing(self) -> None:
+        """Display closing message."""
+        print(ConsoleFormatter.section("Thank You"))
+        print("Meeting notes have been saved successfully!")
+        print(f"\n{ConsoleFormatter.ROBOT} AI Meeting Notes Manager\n")
+
