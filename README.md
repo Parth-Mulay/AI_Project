@@ -1,6 +1,235 @@
 # AI Meeting Notes Manager
 
-This repository contains the documentation, research, and development artifacts created during the initial stages of the **AI Meeting Notes Manager** project. It includes product discovery, requirement analysis, and AI-assisted software development fundamentals completed during the project's early development.
+**Architecture Setup – Day 3 of a 14-Day AI Software Engineering Internship Capstone Project**
+
+## Project Overview
+
+The AI Meeting Notes Manager is an intelligent solution designed to help teams efficiently capture, organize, and extract insights from meeting recordings. This project demonstrates professional software architecture and clean coding practices with a focus on scalability and maintainability.
+
+**Current Phase:** Architecture Setup (Product Thinking)
+**Status:** ✅ Complete - Ready for Implementation
+
+---
+
+## Planned Features
+
+The following features are planned for implementation in future phases:
+
+- **Audio Transcription**: Convert meeting recordings to text transcripts
+- **Intelligent Summarization**: AI-powered meeting summary generation
+- **Action Item Extraction**: Automatically identify and extract action items
+- **Export Capabilities**: Export meeting notes to PDF, Markdown, and DOCX formats
+- **Participant Tracking**: Track meeting participants and their contributions
+- **Search & Retrieval**: Full-text search across meeting archives
+- **Integration Support**: API integrations with calendar and productivity tools
+
+---
+
+## Project Architecture
+
+The project follows clean architecture principles with clear separation of concerns:
+
+```
+┌─────────────────────────────────────────┐
+│        Application Layer (main.py)      │
+├─────────────────────────────────────────┤
+│      MeetingNotesManager (app.py)       │
+├─────────────────────────────────────────┤
+│         Business Logic Layer            │
+│  ┌──────────────────────────────────┐   │
+│  │    Services                      │   │
+│  │  • MeetingService               │   │
+│  │  • ExportService                │   │
+│  └──────────────────────────────────┘   │
+├─────────────────────────────────────────┤
+│         Core Modules                    │
+│  ┌──────────────────────────────────┐   │
+│  │    AI Module                     │   │
+│  │  • Summarizer                   │   │
+│  │  • ActionItemExtractor          │   │
+│  │  • Prompts                      │   │
+│  └──────────────────────────────────┘   │
+│  ┌──────────────────────────────────┐   │
+│  │    Audio Module                 │   │
+│  │  • Transcriber                  │   │
+│  │  • AudioUtils                   │   │
+│  └──────────────────────────────────┘   │
+├─────────────────────────────────────────┤
+│         Data Layer                      │
+│  ┌──────────────────────────────────┐   │
+│  │    Models                        │   │
+│  │  • Meeting                       │   │
+│  └──────────────────────────────────┘   │
+├─────────────────────────────────────────┤
+│         Utility Layer                   │
+│  ┌──────────────────────────────────┐   │
+│  │  • Logger                        │   │
+│  │  • FileHandler                   │   │
+│  │  • Config                        │   │
+│  └──────────────────────────────────┘   │
+```
+
+---
+
+## Folder Structure
+
+```
+AI-Meeting-Notes-Manager/
+│
+├── src/
+│   ├── main.py                    # Application entry point
+│   ├── app.py                     # Core MeetingNotesManager class
+│   ├── config.py                  # Project configuration
+│   │
+│   ├── ai/                        # AI/ML modules
+│   │   ├── summarizer.py          # Meeting summarization
+│   │   ├── action_items.py        # Action item extraction
+│   │   └── prompts.py             # AI prompts and templates
+│   │
+│   ├── audio/                     # Audio processing modules
+│   │   ├── transcriber.py         # Audio to text transcription
+│   │   └── audio_utils.py         # Audio utility functions
+│   │
+│   ├── models/                    # Data models
+│   │   └── meeting.py             # Meeting class definition
+│   │
+│   ├── services/                  # Business logic services
+│   │   ├── meeting_service.py     # Meeting management service
+│   │   └── export_service.py      # Export functionality
+│   │
+│   └── utils/                     # Utility modules
+│       ├── logger.py              # Logging configuration
+│       └── file_handler.py        # File operations
+│
+├── tests/                         # Test suite
+│   └── test_structure.py          # Architecture tests
+│
+├── Day3_Docs/                     # Day 3 documentation
+├── Day1_Docs/                     # Day 1 artifacts
+├── Day2_Docs/                     # Day 2 artifacts
+│
+├── requirements.txt               # Python dependencies
+├── README.md                      # This file
+├── .gitignore                     # Git ignore rules
+├── LICENSE                        # MIT License
+└── .env.example                   # Environment variables template
+```
+
+---
+
+## Installation
+
+### Prerequisites
+- Python 3.8 or higher
+- pip (Python package manager)
+
+### Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Parth-Mulay/AI_Project.git
+   cd AI-Meeting-Notes-Manager
+   ```
+
+2. **Create a virtual environment**
+   ```bash
+   python -m venv venv
+   
+   # Activate virtual environment
+   # On Windows:
+   venv\Scripts\activate
+   
+   # On macOS/Linux:
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables** (optional)
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+---
+
+## Running the Project
+
+### Start the Application
+```bash
+python src/main.py
+```
+
+**Expected Output:**
+```
+==================================================
+
+        AI MEETING NOTES MANAGER
+
+Architecture Initialized Successfully
+
+Day 3 Product Thinking Completed
+
+==================================================
+
+Initialized Modules:
+
+✓ Audio Processing (Transcriber)
+✓ AI Summarization (MeetingSummarizer)
+✓ Action Item Extraction (ActionItemExtractor)
+✓ Meeting Management (MeetingService)
+✓ Export Services (PDF, Markdown, DOCX)
+✓ Logging & Utilities
+
+==================================================
+
+Status: Ready for Development
+
+Version: 0.1.0
+Author: Parth Mulay
+
+Project: An intelligent meeting notes management system powered by AI
+
+==================================================
+```
+
+### Run Tests
+```bash
+pytest tests/ -v
+```
+
+Or run specific test:
+```bash
+pytest tests/test_structure.py -v
+```
+
+---
+
+## Current Status
+
+### ✅ Day 3 – Architecture Setup (Complete)
+
+**Completed:**
+- ✓ Professional project structure created
+- ✓ Clean architecture design implemented
+- ✓ All core modules initialized with placeholder implementations
+- ✓ Service layer established
+- ✓ Logging system configured
+- ✓ Test suite created
+- ✓ Documentation generated
+- ✓ Project runs successfully without errors
+
+**Modules Implemented:**
+- ✓ Configuration management
+- ✓ Audio processing (Transcriber, AudioUtils)
+- ✓ AI services (Summarizer, ActionItemExtractor)
+- ✓ Meeting management service
+- ✓ Export service (Markdown, PDF, DOCX)
+- ✓ Logging and file handling utilities
+- ✓ Data models (Meeting)
 
 ---
 
@@ -49,23 +278,94 @@ The second phase focused on AI-assisted software development practices, prompt e
 
 ---
 
-## Repository Structure
+## Future Roadmap
 
-```
-AI-Meeting-Notes-Manager/
-│
-├── Day1_Docs/
-│   ├── Product Discovery & Planning Documents
-│   └── Day 1 Summary
-│
-├── Day2_Docs/
-│   ├── AI Development Documentation
-│   ├── Python Practice Programs
-│   └── Day 2 Summary
-│
-└── README.md
-```
+### Phase 2: Core Implementation
+- Implement audio transcription with Whisper API
+- Integrate AI summarization with GPT-4
+- Develop action item extraction logic
+- Build export functionality for all formats
+
+### Phase 3: Web Interface
+- Create REST API with FastAPI
+- Build frontend with React
+- Implement user authentication
+- Add database integration (PostgreSQL/MongoDB)
+
+### Phase 4: Advanced Features
+- Real-time transcription
+- Multi-language support
+- Meeting analytics dashboard
+- Integration with productivity tools
+
+### Phase 5: Deployment & Optimization
+- Docker containerization
+- Cloud deployment (AWS/GCP/Azure)
+- Performance optimization
+- Security hardening
 
 ---
 
-AI Meeting Notes Manager
+## Development Standards
+
+This project adheres to the following standards:
+
+- **Code Style**: PEP 8 compliant
+- **Documentation**: Comprehensive docstrings and comments
+- **Architecture**: Clean Architecture with separation of concerns
+- **Testing**: Unit tests with pytest
+- **Logging**: Structured logging throughout
+- **Version Control**: Git with meaningful commit messages
+
+---
+
+## Project Management
+
+**Project Type**: AI Software Engineering Capstone
+**Duration**: 14 Days
+**Phase**: 3/14 (Architecture Setup)
+**Timeline**: Days 1-3 Complete, Days 4-14 Upcoming
+
+---
+
+## Technology Stack
+
+- **Language**: Python 3.8+
+- **Testing**: pytest
+- **Logging**: Python logging
+- **Configuration**: python-dotenv
+- **Validation**: pydantic
+- **Future**: FastAPI, SQLAlchemy, PostgreSQL, React
+
+---
+
+## Author
+
+**Parth Mulay**
+- AI Software Engineering Internship Capstone Project
+- GitHub: [Parth-Mulay/AI_Project](https://github.com/Parth-Mulay/AI_Project)
+
+---
+
+## License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+## Contributing
+
+This is a capstone project. Contributions and feedback are welcome!
+
+---
+
+## Support
+
+For questions or issues, please refer to:
+- Project Documentation: [Day3_Docs/](Day3_Docs/)
+- Previous Phases: [Day1_Docs/](Day1_Docs/) and [Day2_Docs/](Day2_Docs/)
+
+---
+
+**Last Updated**: 2024
+**Status**: Architecture Setup Complete ✅
