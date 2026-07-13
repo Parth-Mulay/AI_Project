@@ -340,10 +340,19 @@ The fifth phase focused on translating requirements into a modern SaaS user inte
 
 ### Professional Web Dashboard Prototype
 
-We have implemented a professional web-based user interface representing the Figma design system specifications inside [src/web/](src/web/):
-- **[index.html](src/web/index.html):** The structure representing the dashboard layout grid, incorporating left navigation sidebars, statistics telemetry grids, active wave indicator captures, drag-and-drop file uploaders, tab editors, and workspace directories.
-- **[style.css](src/web/style.css):** The visual theme implementing custom variables, dark color tokens, geometric typography (Outfit & Inter), glassmorphism backdrops, pulsing record animations, and role-restricted settings blocker overlays.
-- **[app.js](src/web/app.js):** The logic orchestrating SPA routing, client-side FileReader text doc parser, live note analyzer with floating AI toast cards, Admin/Member role-based permission switches, and native browser-triggered Markdown exporter downloads.
+We have implemented a responsive, high-fidelity web user interface matching the Figma mockup layout specifications inside [src/web/](src/web/):
+- **Separate View Templates:** Refactored the dashboard layout into isolated HTML5 state-synchronized screens:
+  - [dashboard.html](src/web/dashboard.html): Dashboard hub displaying metrics cards, recent meetings list, and priority checklist filter tabs. Contains responsive native SVG graphs (Time Trend splines with hover tooltips, Meetings by Category segmented donuts, and Actions Completion dials).
+  - [live.html](src/web/live.html): In-browser recording cockpit with live typing note analyzers and real-time AI outcome checklists.
+  - [upload.html](src/web/upload.html): File uploader drag-and-drop zone featuring multi-stage analysis pipeline loader timelines.
+  - [archive.html](src/web/archive.html): Grid database search and filter indexing with tab-panel views (Summary, Action Items, Timeline Transcripts) and Markdown download export helpers.
+  - [directory.html](src/web/directory.html): Workspace user lists and password-overlay gated Security Audit Logs.
+  - [settings.html](src/web/settings.html): Gated Compliance retention rules sliders and Slack webhook integrations.
+  - [onboarding.html](src/web/onboarding.html): Design tour explainability cards.
+  - [index.html](src/web/index.html): Redirect page forwarding browser requests to `dashboard.html`.
+- **Styling Design System ([style.css](src/web/style.css)):** Implements the matte glassmorphic panels, dark gradients, geometric scales, pulsed record indicators, and custom `@keyframes spin` loading animations.
+- **Stateful Storage Sync ([app.js](src/web/app.js)):** Coordinates SPA routing, dynamic file reading, live note extraction, and browser-wide `localStorage` sync that matches role and notifications across views.
+- **Google Material Symbols:** Replaced primitive system emojis with professional Outlined vector icons for sidebars, cards, and pipelines.
 
 To run, simply open [index.html](src/web/index.html) inside any standard web browser.
 
