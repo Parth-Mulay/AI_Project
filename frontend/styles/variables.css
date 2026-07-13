@@ -1,0 +1,38 @@
+/* ----------------------------------------------------
+   FIGMA DESIGN SYSTEM VARIABLES (Premium SaaS)
+   ---------------------------------------------------- */
+:root {
+    /* Color Palette */
+    --color-bg-base: #060814;
+    --color-bg-canvas: #0B0F19;
+    --color-surface-glass: rgba(22, 30, 46, 0.45);
+    --color-surface-hover: rgba(32, 43, 62, 0.6);
+    --color-border-glass: rgba(36, 50, 73, 0.5);
+    
+    /* Typography Colors */
+    --color-text-primary: #F3F4F6;
+    --color-text-secondary: #8E9BAE;
+    
+    /* Accents & Categories */
+    --color-accent-purple: #8B5CF6;
+    --color-accent-blue: #3F83F8;
+    --color-accent-pink: #E52E71;
+    --color-accent-yellow: #F59E0B;
+    --color-accent-green: #10B981;
+    --color-accent-red: #EF4444;
+    
+    /* Spacing Grid (8px Base System) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
+
+    /* Border Radii */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --border-width: 1.5px;
+}
