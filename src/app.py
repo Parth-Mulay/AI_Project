@@ -83,6 +83,8 @@ class MeetingNotesApp:
             elif choice == "8":
                 self._display_closing()
                 break
+            elif not choice:
+                continue
             else:
                 print(ConsoleFormatter.color_text("\n⚠️ Invalid selection. Please select 1-8.", "red"))
                 input("Press Enter to continue...")
@@ -203,7 +205,7 @@ class MeetingNotesApp:
         print(ConsoleFormatter.subheader("Upload Audio or Documents"))
         print("Supported formats: .mp3, .wav, .docx, .pdf (Max size: 100MB)\n")
 
-        filepath = input("Enter path to file: ").strip()
+        filepath = input("Enter path to file: ").strip().strip('"\'')
         if not filepath:
             print(ConsoleFormatter.color_text("Upload cancelled.", "red"))
             input("\nPress Enter to return to Dashboard...")
