@@ -331,6 +331,13 @@ The fifth phase focused on translating requirements into a modern SaaS user inte
 - [04 Screen Traceability Matrix](Day5_Docs/04_Screen_Traceability.md)
 - [05 Design Decisions Rationale](Day5_Docs/05_Design_Decisions.md)
 
+### Prototype & Analysis Upgrades
+
+- **Dynamic Analysis Pipeline:** Fully replaced hardcoded meeting outcomes with a dynamic standard-library content processing engine supporting `.docx`, `.pdf`, `.txt`, `.mp3`, and `.wav` formats.
+- **Granular Insight Extraction:** Added rule-based parsers that extract participants, chronologically indexed dialogue messages, decisions (e.g. `agreed`, `approved`), action checklists (capturing owner and due dates), next steps, risks, and executive summaries.
+- **Robust File Validation:** Enforces max file limits (10MB for documents, 100MB for audio), detects empty documents, catches corruption exceptions, and identifies password-protected files.
+- **Verification Tests:** Added a dedicated test suite [test_document_analysis.py](tests/test_document_analysis.py) asserting schema safety, extraction reliability, and proper validation handling.
+
 ---
 
 ## Future Roadmap

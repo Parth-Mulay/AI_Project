@@ -199,11 +199,97 @@ class MeetingNotesApp:
 
         input("\nPress Enter to return to Dashboard...")
 
+    def _extract_text_from_txt(self, file_path: str) -> str:
+        """Extract text from plain text file."""
+        try:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                text = f.read()
+            if not text.strip():
+                raise ValueError("The document is empty.")
+            return text
+        except ValueError as ve:
+            raise ve
+        except Exception as e:
+            raise ValueError(f"The document is corrupted or unreadable. Details: {e}")
+
+    def _extract_text_from_docx(self, file_path: str) -> str:
+        """Extract text from docx using zipfile and xml parsing (no dependencies)."""
+        import zipfile
+        import xml.etree.ElementTree as ET
+        try:
+            if not zipfile.is_zipfile(file_path):
+                raise ValueError("The document is corrupted or unreadable.")
+            with zipfile.ZipFile(file_path) as z:
+                if "word/document.xml" not in z.namelist():
+                    raise ValueError("The document is corrupted or not a valid Word file.")
+                try:
+                    xml_content = z.read("word/document.xml")
+                except RuntimeError as re_err:
+                    if "encrypted" in str(re_err).lower() or "password" in str(re_err).lower():
+                        raise ValueError("The document is password protected and cannot be read.")
+                    raise ValueError(f"The document is corrupted or unreadable. Details: {re_err}")
+                root = ET.fromstring(xml_content)
+                texts = []
+                for elem in root.iter():
+                    if elem.tag.endswith("}t") or elem.tag == "t":
+                        if elem.text:
+                            texts.append(elem.text)
+                extracted = " ".join(texts).strip()
+                if not extracted:
+                    raise ValueError("The document is empty.")
+                return extracted
+        except ValueError as ve:
+            raise ve
+        except Exception as e:
+            raise ValueError(f"The document is corrupted or unreadable. Details: {e}")
+
+    def _extract_text_from_pdf(self, file_path: str) -> str:
+        """Extract text from pdf using regex stream parsing (no dependencies)."""
+        import re
+        try:
+            with open(file_path, "rb") as f:
+                content = f.read()
+            if b"/Encrypt" in content or b"/encrypt" in content:
+                raise ValueError("The document is password protected and cannot be read.")
+            matches = re.findall(rb"\(([^)]*)\)", content)
+            texts = []
+            for m in matches:
+                try:
+                    text = m.decode("utf-8", errors="ignore")
+                    text = text.replace("\\(", "(").replace("\\)", ")")
+                    if text.strip():
+                        texts.append(text)
+                except Exception:
+                    pass
+            extracted = " ".join(texts).strip()
+            if not extracted:
+                raise ValueError("The document is empty.")
+            return extracted
+        except ValueError as ve:
+            raise ve
+        except Exception as e:
+            raise ValueError(f"The document is corrupted or unreadable. Details: {e}")
+
+    def _extract_text_from_audio(self, file_path: str) -> str:
+        """Transcribe and extract text from audio file."""
+        from audio.transcriber import AudioTranscriber
+        try:
+            transcriber = AudioTranscriber()
+            text = transcriber.transcribe(file_path)
+            if not text.strip():
+                raise ValueError("The document is empty.")
+            return text
+        except ValueError as ve:
+            raise ve
+        except Exception as e:
+            raise ValueError(f"The document is corrupted or unreadable. Details: {e}")
+
     def _upload_audio_mock(self) -> None:
-        """Simulate file upload and verification checks."""
+        """Simulate file upload, run validation pipeline, and extract actual AI insights."""
         ConsoleFormatter.clear_screen()
         print(ConsoleFormatter.subheader("Upload Audio or Documents"))
-        print("Supported formats: .mp3, .wav, .docx, .pdf (Max size: 100MB)\n")
+        print("Supported formats: .mp3, .wav, .docx, .pdf, .txt")
+        print("Max limits: 100MB for audio, 10MB for text/documents\n")
 
         filepath = input("Enter path to file: ").strip().strip('"\'')
         if not filepath:
@@ -211,48 +297,93 @@ class MeetingNotesApp:
             input("\nPress Enter to return to Dashboard...")
             return
 
-        # Verification Checks
+        # 1. Validation Checks: Exist check
+        if not os.path.exists(filepath):
+            print(ConsoleFormatter.color_text(f"\n❌ Error: File not found at path '{filepath}'.", "red"))
+            input("\nPress Enter to return to Dashboard...")
+            return
+
+        # 2. Validation Checks: Extension check
         extension = os.path.splitext(filepath)[1].lower()
-        allowed = [".mp3", ".wav", ".docx", ".pdf"]
+        allowed = [".mp3", ".wav", ".docx", ".pdf", ".txt"]
         
         if extension not in allowed:
             print(ConsoleFormatter.color_text(f"\n❌ Error: Unsupported file format '{extension}'.", "red"))
-            print("Allowed formats are: .mp3, .wav, .docx, .pdf")
+            print("Allowed formats are: .mp3, .wav, .docx, .pdf, .txt")
             input("\nPress Enter to return to Dashboard...")
             return
 
-        # Mocking size validation
-        size_prompt = input("Enter simulated file size in MB (e.g. 15): ").strip()
+        # 3. Validation Checks: Size limit check
         try:
-            size_mb = float(size_prompt)
-        except ValueError:
-            size_mb = 10.0
-
-        if size_mb > 100:
-            print(ConsoleFormatter.color_text(f"\n❌ Error: File size ({size_mb}MB) exceeds the 100MB limit.", "red"))
+            file_size_bytes = os.path.getsize(filepath)
+            file_size_mb = file_size_bytes / (1024 * 1024)
+        except Exception as e:
+            print(ConsoleFormatter.color_text(f"\n❌ Error: The document is corrupted or unreadable. Details: {e}", "red"))
             input("\nPress Enter to return to Dashboard...")
             return
 
-        # Processing state simulation
-        print("\n" + ConsoleFormatter.SEPARATOR)
-        print("🤖 [AI Processing] Loading File and Verifying Magic Bytes...")
-        print("🤖 [AI Processing] Transcribing content using Whisper API...")
-        print("🤖 [AI Processing] Extracting highlights using Claude API...")
-        print(ConsoleFormatter.SEPARATOR)
+        is_audio = extension in [".mp3", ".wav"]
+        max_limit_mb = 100.0 if is_audio else 10.0
+        if file_size_mb > max_limit_mb:
+            print(ConsoleFormatter.color_text(f"\n❌ Error: File size ({file_size_mb:.2f}MB) exceeds the limit of {max_limit_mb}MB.", "red"))
+            input("\nPress Enter to return to Dashboard...")
+            return
 
-        # Create simulated meeting notes based on upload
-        title = f"Uploaded Meeting - {os.path.basename(filepath)}"
-        meeting = Meeting(title, ["Uploader", "AI-Transcriber"])
-        self.detection_service.process_message(meeting, "Uploader: We uploaded the file for documentation.")
-        self.detection_service.process_message(meeting, "AI-Transcriber: Decided to approve the release notes.")
-        self.detection_service.process_message(meeting, "Uploader: Priya will deploy the code by Friday.")
-        meeting.summary = SummarizationService.generate_summary(meeting)
+        # 4. Processing stages animation
+        import time
+        print("\n🤖 [AI Processing] Reading document...")
+        time.sleep(0.2)
+
+        try:
+            if extension == ".txt":
+                text = self._extract_text_from_txt(filepath)
+            elif extension == ".docx":
+                text = self._extract_text_from_docx(filepath)
+            elif extension == ".pdf":
+                text = self._extract_text_from_pdf(filepath)
+            else:
+                text = self._extract_text_from_audio(filepath)
+        except ValueError as ve:
+            print(ConsoleFormatter.color_text(f"\n❌ Error: {ve}", "red"))
+            input("\nPress Enter to return to Dashboard...")
+            return
+        except Exception as e:
+            print(ConsoleFormatter.color_text(f"\n❌ Error: The document is corrupted or unreadable. Details: {e}", "red"))
+            input("\nPress Enter to return to Dashboard...")
+            return
+
+        print("🤖 [AI Processing] Extracting text...")
+        time.sleep(0.2)
+
+        # Create dynamically populated Meeting
+        title = f"Uploaded Document - {os.path.basename(filepath)}"
+        meeting = Meeting(title, ["Unknown"])
+        
+        print("🤖 [AI Processing] Analyzing meeting...")
+        time.sleep(0.2)
+        print("🤖 [AI Processing] Generating summary...")
+        time.sleep(0.2)
+        print("🤖 [AI Processing] Extracting action items...")
+        time.sleep(0.2)
+
+        # Dynamic AI Pipeline Run
+        self.detection_service.analyze_document(meeting, text)
         self.meetings.append(meeting)
 
-        print_success("Audio Processed and Synced Successfully!")
-        self.notifications.append(f"Uploaded meeting '{title}' processed.")
+        print("🤖 [AI Processing] Completed.")
+        time.sleep(0.1)
+        print_success("Document Processed Successfully!")
+        self.notifications.append(f"Processed file '{title}' successfully.")
         
         self._display_meeting_details(meeting)
+        
+        # Export meeting notes
+        try:
+            exp_path = self.export_service.export_to_markdown(meeting)
+            print_success(f"Meeting notes exported to: {exp_path}")
+        except Exception as e:
+            print(f"Export failed: {e}")
+            
         input("\nPress Enter to return to Dashboard...")
 
     def _view_meeting_history(self) -> None:
