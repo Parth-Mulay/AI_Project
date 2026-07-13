@@ -64,7 +64,7 @@ class MeetingNotesApp:
         """Start the interactive dashboard loop."""
         while True:
             self._display_dashboard_menu()
-            choice = input("\nPlease select an option (1-8): ").strip()
+            choice = input("\nPlease select an option (1-9): ").strip()
 
             if choice == "1":
                 self._start_new_meeting()
@@ -83,11 +83,25 @@ class MeetingNotesApp:
             elif choice == "8":
                 self._display_closing()
                 break
+            elif choice == "9":
+                self._open_web_dashboard()
             elif not choice:
                 continue
             else:
-                print(ConsoleFormatter.color_text("\n⚠️ Invalid selection. Please select 1-8.", "red"))
+                print(ConsoleFormatter.color_text("\n⚠️ Invalid selection. Please select 1-9.", "red"))
                 input("Press Enter to continue...")
+
+    def _open_web_dashboard(self) -> None:
+        """Open the professional web-based Figma dashboard in the default browser."""
+        import webbrowser
+        web_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "web", "index.html"))
+        if os.path.exists(web_path):
+            print(ConsoleFormatter.color_text("\nOpening Professional Web Dashboard in your browser...", "green"))
+            print(f"File URI: file://{web_path}")
+            webbrowser.open("file://" + web_path)
+        else:
+            print(ConsoleFormatter.color_text(f"\n❌ Error: Web files not found at: {web_path}", "red"))
+        input("\nPress Enter to return to main menu...")
 
     def _display_dashboard_menu(self) -> None:
         """Render the polished console dashboard menu."""
@@ -111,6 +125,7 @@ class MeetingNotesApp:
         print(" [6] ⚙️ System Settings & Integrations")
         print(" [7] 📖 Onboarding Guide / UI-UX Tour")
         print(" [8] ❌ Exit Application")
+        print(" [9] 🌐 Open Professional Web Dashboard (Figma Design)")
         print(ConsoleFormatter.SEPARATOR)
 
         # Active Alerts/Notifications
