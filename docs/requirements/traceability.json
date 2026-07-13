@@ -1,0 +1,301 @@
+{
+  "traceability": [
+    {
+      "requirement_id": "FR-AUTH-001",
+      "requirement_name": "Email registration with verification",
+      "user_story_id": "US-AUTH-001",
+      "acceptance_criteria_id": "AC-AUTH-001",
+      "future_screen": "Register / Sign Up",
+      "future_backend_module": "Authentication Service",
+      "future_database_entity": "users",
+      "priority": "Must",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-AUTH-002",
+      "requirement_name": "SSO via Google Workspace and Azure AD",
+      "user_story_id": "US-AUTH-002",
+      "acceptance_criteria_id": "AC-AUTH-002",
+      "future_screen": "Login",
+      "future_backend_module": "SSO / OAuth Client",
+      "future_database_entity": "users, user_sso",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-AUTH-003",
+      "requirement_name": "Role-based access control",
+      "user_story_id": "US-AUTH-003",
+      "acceptance_criteria_id": "AC-AUTH-003",
+      "future_screen": "Admin / Member Settings",
+      "future_backend_module": "Authorization Middleware",
+      "future_database_entity": "users.role",
+      "priority": "Must",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-DB-001",
+      "requirement_name": "Personalized dashboard showing recent meetings and pending actions",
+      "user_story_id": "US-DB-001",
+      "acceptance_criteria_id": "AC-DB-001",
+      "future_screen": "Dashboard",
+      "future_backend_module": "Dashboard API Service",
+      "future_database_entity": "meetings, action_items",
+      "priority": "Must",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-MTG-001",
+      "requirement_name": "Create meetings persisting metadata",
+      "user_story_id": "US-MTG-001",
+      "acceptance_criteria_id": "AC-MTG-001",
+      "future_screen": "Create Meeting Modal",
+      "future_backend_module": "Meeting Management Service",
+      "future_database_entity": "meetings",
+      "priority": "Must",
+      "status": "Implemented (Prototype)"
+    },
+    {
+      "requirement_id": "FR-MTG-002",
+      "requirement_name": "Upload content (text, audio, docx, pdf) queuing transcription",
+      "user_story_id": "US-MTG-002",
+      "acceptance_criteria_id": "AC-MTG-002",
+      "future_screen": "Meeting Details (Upload)",
+      "future_backend_module": "Audio / Document Upload Service",
+      "future_database_entity": "uploaded_files",
+      "priority": "Must",
+      "status": "Implemented (Text) / Planned (Audio)"
+    },
+    {
+      "requirement_id": "FR-MTG-003",
+      "requirement_name": "Edit meeting content with versioned edits",
+      "user_story_id": "US-MTG-003",
+      "acceptance_criteria_id": "AC-MTG-003",
+      "future_screen": "Interactive Transcript Editor",
+      "future_backend_module": "Versioning / Revision Service",
+      "future_database_entity": "meeting_versions",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-MTG-004",
+      "requirement_name": "Delete/Archive with retention policy enforcement",
+      "user_story_id": "US-MTG-004",
+      "acceptance_criteria_id": "AC-MTG-004",
+      "future_screen": "Organization Compliance",
+      "future_backend_module": "Retention Policy Daemon",
+      "future_database_entity": "meetings",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-SEARCH-001",
+      "requirement_name": "Full-text search across title, body, summaries in <2s",
+      "user_story_id": "US-SEARCH-001",
+      "acceptance_criteria_id": "AC-SEARCH-001",
+      "future_screen": "Search Page",
+      "future_backend_module": "Full-Text Search Engine",
+      "future_database_entity": "meetings",
+      "priority": "Must",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-SEARCH-002",
+      "requirement_name": "Semantic search using embeddings",
+      "user_story_id": "US-SEARCH-002",
+      "acceptance_criteria_id": "AC-SEARCH-002",
+      "future_screen": "Search Page (Semantic Toggle)",
+      "future_backend_module": "Semantic Vector Search Service",
+      "future_database_entity": "meeting_embeddings",
+      "priority": "Could",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-AI-001",
+      "requirement_name": "Trigger Anthropic API for summaries & extractions",
+      "user_story_id": "US-AI-001",
+      "acceptance_criteria_id": "AC-AI-001",
+      "future_screen": "Meeting Details (Summary View)",
+      "future_backend_module": "Claude AI Client Service",
+      "future_database_entity": "meetings.summary",
+      "priority": "Must",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-AI-002",
+      "requirement_name": "Show confidence and source excerpts",
+      "user_story_id": "US-AI-002",
+      "acceptance_criteria_id": "AC-AI-002",
+      "future_screen": "Meeting Details (AI Highlights)",
+      "future_backend_module": "AI Excerpt Alignment Engine",
+      "future_database_entity": "meeting_highlights",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-AI-003",
+      "requirement_name": "Fallback to extractive summarizer when AI unavailable",
+      "user_story_id": "US-AI-003",
+      "acceptance_criteria_id": "AC-AI-003",
+      "future_screen": "Meeting Details (Summary View)",
+      "future_backend_module": "Local TextRank Summarizer",
+      "future_database_entity": "meetings.summary",
+      "priority": "Must",
+      "status": "Implemented (Prototype)"
+    },
+    {
+      "requirement_id": "FR-AI-004",
+      "requirement_name": "Re-run summary with different prompts",
+      "user_story_id": "US-AI-004",
+      "acceptance_criteria_id": "AC-AI-004",
+      "future_screen": "Template Manager Panel",
+      "future_backend_module": "AI Prompt Template Service",
+      "future_database_entity": "prompt_templates",
+      "priority": "Could",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-ACT-001",
+      "requirement_name": "Extract action items and suggest owners",
+      "user_story_id": "US-ACT-001",
+      "acceptance_criteria_id": "AC-ACT-001",
+      "future_screen": "Meeting Details (Actions list)",
+      "future_backend_module": "AI Action Item Extractor",
+      "future_database_entity": "action_items",
+      "priority": "Must",
+      "status": "Implemented (Prototype)"
+    },
+    {
+      "requirement_id": "FR-ACT-002",
+      "requirement_name": "Track action state and due dates",
+      "user_story_id": "US-ACT-002",
+      "acceptance_criteria_id": "AC-ACT-002",
+      "future_screen": "Dashboard Checklist / Board",
+      "future_backend_module": "Task Workflow Manager",
+      "future_database_entity": "action_items",
+      "priority": "Must",
+      "status": "Implemented (Prototype)"
+    },
+    {
+      "requirement_id": "FR-ACT-003",
+      "requirement_name": "Send reminders via email/Slack",
+      "user_story_id": "US-ACT-003",
+      "acceptance_criteria_id": "AC-ACT-003",
+      "future_screen": "Notification Settings",
+      "future_backend_module": "Scheduler / Notification Engine",
+      "future_database_entity": "action_reminders",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-TAG-001",
+      "requirement_name": "Tagging and categories for organization",
+      "user_story_id": "US-TAG-001",
+      "acceptance_criteria_id": "AC-TAG-001",
+      "future_screen": "Tag Manager Modal",
+      "future_backend_module": "Categorization & Tagging Service",
+      "future_database_entity": "tags, meeting_tags",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-EXT-001",
+      "requirement_name": "Export summary to PDF/DOCX",
+      "user_story_id": "US-EXT-001",
+      "acceptance_criteria_id": "AC-EXT-001",
+      "future_screen": "Meeting Details (Export Dropdown)",
+      "future_backend_module": "Document Generation Service",
+      "future_database_entity": "N/A (In-Memory)",
+      "priority": "Must",
+      "status": "Implemented (Prototype)"
+    },
+    {
+      "requirement_id": "FR-EXT-002",
+      "requirement_name": "Push actions to Jira/Asana",
+      "user_story_id": "US-EXT-002",
+      "acceptance_criteria_id": "AC-EXT-002",
+      "future_screen": "Integrations Center",
+      "future_backend_module": "Integration Connector API",
+      "future_database_entity": "integration_tokens",
+      "priority": "Could",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-EXT-003",
+      "requirement_name": "Post highlights to Slack/Teams",
+      "user_story_id": "US-EXT-003",
+      "acceptance_criteria_id": "AC-EXT-003",
+      "future_screen": "Share Dialog",
+      "future_backend_module": "External Webhook Dispatcher",
+      "future_database_entity": "integration_webhooks",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-PRF-001",
+      "requirement_name": "User profile settings",
+      "user_story_id": "US-PRF-001",
+      "acceptance_criteria_id": "AC-PRF-001",
+      "future_screen": "Profile Page",
+      "future_backend_module": "User Preferences Service",
+      "future_database_entity": "users",
+      "priority": "Could",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-PRF-002",
+      "requirement_name": "Team settings including retention",
+      "user_story_id": "US-PRF-002",
+      "acceptance_criteria_id": "AC-PRF-002",
+      "future_screen": "Admin Console (Compliance)",
+      "future_backend_module": "Organization Settings Service",
+      "future_database_entity": "organizations",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-NOT-001",
+      "requirement_name": "In-app and email notifications for actions",
+      "user_story_id": "US-NOT-001",
+      "acceptance_criteria_id": "AC-NOT-001",
+      "future_screen": "Dashboard Notification Bell",
+      "future_backend_module": "Notification Dispatcher Broker",
+      "future_database_entity": "notifications",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-ADM-001",
+      "requirement_name": "Admin dashboard for usage and logs",
+      "user_story_id": "US-ADM-001",
+      "acceptance_criteria_id": "AC-ADM-001",
+      "future_screen": "IT Admin Portal",
+      "future_backend_module": "Usage Statistics Service",
+      "future_database_entity": "system_metrics",
+      "priority": "Could",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-ADM-002",
+      "requirement_name": "Audit trail for AI/fallback decisions",
+      "user_story_id": "US-ADM-002",
+      "acceptance_criteria_id": "AC-ADM-002",
+      "future_screen": "IT Admin Portal (Audits Panel)",
+      "future_backend_module": "Audit Logging Service",
+      "future_database_entity": "audit_trail",
+      "priority": "Should",
+      "status": "Planned"
+    },
+    {
+      "requirement_id": "FR-RPT-001",
+      "requirement_name": "Basic team-level reports",
+      "user_story_id": "US-RPT-001",
+      "acceptance_criteria_id": "AC-RPT-001",
+      "future_screen": "Reports Tab",
+      "future_backend_module": "Analytics Engine Service",
+      "future_database_entity": "meetings, action_items",
+      "priority": "Could",
+      "status": "Planned"
+    }
+  ]
+}

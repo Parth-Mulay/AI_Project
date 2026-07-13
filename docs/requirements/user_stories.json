@@ -1,0 +1,166 @@
+{
+  "user_stories": [
+    {
+      "id": "US-AUTH-001",
+      "requirement_id": "FR-AUTH-001",
+      "actor": "User (Meeting Participant / Organizer)",
+      "story": "As a new user, I want to register an account using my corporate email address and verify it via a secure verification link, so that I can securely access the platform and ensure only authorized team members can sign up."
+    },
+    {
+      "id": "US-AUTH-002",
+      "requirement_id": "FR-AUTH-002",
+      "actor": "User, IT Admin",
+      "story": "As a corporate employee, I want to sign in using Single Sign-On (SSO) via Google Workspace or Azure Active Directory, so that I don't have to manage another set of credentials and can automatically inherit my organization's security policies and team context."
+    },
+    {
+      "id": "US-AUTH-003",
+      "requirement_id": "FR-AUTH-003",
+      "actor": "Admin, Member",
+      "story": "As a team administrator, I want to assign granular roles (Admin vs. Member) to my team members, so that sensitive meeting notes and configuration settings are protected and restricted to authorized personnel only."
+    },
+    {
+      "id": "US-DB-001",
+      "requirement_id": "FR-DB-001",
+      "actor": "User",
+      "story": "As a busy team member, I want a personalized dashboard that displays my 5 most recent meetings and an aggregated list of my pending action items, so that I can quickly catch up on recent work and understand what requires my immediate attention."
+    },
+    {
+      "id": "US-MTG-001",
+      "requirement_id": "FR-MTG-001",
+      "actor": "User (Organizer)",
+      "story": "As a meeting organizer, I want to create a new meeting entry by providing metadata like title, date, time, and participants, so that my meeting notes are properly indexed and associated with the correct team context."
+    },
+    {
+      "id": "US-MTG-002",
+      "requirement_id": "FR-MTG-002",
+      "actor": "User (Organizer)",
+      "story": "As a meeting organizer, I want to upload text, audio (MP3, WAV, M4A), docx, or PDF files and have them queued for transcription, so that I don't have to transcribe conversations manually."
+    },
+    {
+      "id": "US-MTG-003",
+      "requirement_id": "FR-MTG-003",
+      "actor": "User (Member)",
+      "story": "As a meeting participant, I want to edit the meeting transcript or AI-generated summaries and track these edits as separate versions, so that we can correct any transcription errors while maintaining a history of changes."
+    },
+    {
+      "id": "US-MTG-004",
+      "requirement_id": "FR-MTG-004",
+      "actor": "User, IT Admin",
+      "story": "As a compliance officer, I want meeting records to be deleted or archived automatically based on our organization's data retention policies, so that our organization remains compliant with data privacy regulations (e.g., GDPR, CCPA)."
+    },
+    {
+      "id": "US-SEARCH-001",
+      "requirement_id": "FR-SEARCH-001",
+      "actor": "User",
+      "story": "As a team member, I want to perform full-text searches across meeting titles, bodies, and summaries with results returning in less than 2 seconds, so that I can instantly find specific mentions or keywords from past discussions."
+    },
+    {
+      "id": "US-SEARCH-002",
+      "requirement_id": "FR-SEARCH-002",
+      "actor": "User",
+      "story": "As a project manager, I want to perform semantic searches on past meeting concepts (e.g., searching for 'database decisions' even if those exact words aren't in the notes), so that I can retrieve relevant context across a long history of discussions."
+    },
+    {
+      "id": "US-AI-001",
+      "requirement_id": "FR-AI-001",
+      "actor": "User",
+      "story": "As a project stakeholder, I want the system to automatically trigger the Anthropic Claude API to generate a structured meeting summary and key highlights from the transcript, so that I can review a meeting's outcome in minutes without reading the entire transcript."
+    },
+    {
+      "id": "US-AI-002",
+      "requirement_id": "FR-AI-002",
+      "actor": "User",
+      "story": "As a detail-oriented user, I want the system to display confidence scores and source excerpts next to each AI-extracted detail, so that I can verify the accuracy of the summary and trust the system's output."
+    },
+    {
+      "id": "US-AI-003",
+      "requirement_id": "FR-AI-003",
+      "actor": "User",
+      "story": "As a user, I want the system to automatically fall back to a local extractive summarizer if the Anthropic API is unavailable or rate-limited, so that my productivity is not disrupted by external API outages."
+    },
+    {
+      "id": "US-AI-004",
+      "requirement_id": "FR-AI-004",
+      "actor": "User",
+      "story": "As a meeting organizer, I want to re-run the summary extraction with customized prompt templates (e.g., 'technical focus' vs. 'executive overview'), so that the generated output fits the specific style and needs of my target audience."
+    },
+    {
+      "id": "US-ACT-001",
+      "requirement_id": "FR-ACT-001",
+      "actor": "User",
+      "story": "As a project manager, I want the system to automatically extract action items and suggest potential owners from the meeting participant list, so that follow-up tasks are documented and assigned immediately after the meeting."
+    },
+    {
+      "id": "US-ACT-002",
+      "requirement_id": "FR-ACT-002",
+      "actor": "User (Task Owner / Manager)",
+      "story": "As a task owner, I want to track the state (Pending, In Progress, Completed) and due dates of my assigned action items, so that I can stay on top of my commitments and show my progress to the team."
+    },
+    {
+      "id": "US-ACT-003",
+      "requirement_id": "FR-ACT-003",
+      "actor": "User",
+      "story": "As a task creator, I want the system to automatically send action-item reminders to assignees via email or Slack, so that deadlines are not missed and team accountability is maintained."
+    },
+    {
+      "id": "US-TAG-001",
+      "requirement_id": "FR-TAG-001",
+      "actor": "User",
+      "story": "As a user with many meetings, I want to tag and categorize meetings (e.g., 'Sprint Planning', 'Retro', 'Client Call'), so that I can filter, organize, and find meetings based on their category."
+    },
+    {
+      "id": "US-EXT-001",
+      "requirement_id": "FR-EXT-001",
+      "actor": "User",
+      "story": "As a meeting organizer, I want to export the structured meeting notes and summary into a PDF or DOCX file, so that I can share them with external clients or stakeholders who do not have access to the system."
+    },
+    {
+      "id": "US-EXT-002",
+      "requirement_id": "FR-EXT-002",
+      "actor": "User (Developer / PM)",
+      "story": "As a software engineer, I want to push extracted action items directly to Jira or Asana as tasks, so that I can manage my work in our team's central tracking tool without manual duplication."
+    },
+    {
+      "id": "US-EXT-003",
+      "requirement_id": "FR-EXT-003",
+      "actor": "User",
+      "story": "As a team leader, I want to post meeting highlights and summaries directly to Slack or Microsoft Teams channels, so that our wider team remains aligned on meeting decisions asynchronously."
+    },
+    {
+      "id": "US-PRF-001",
+      "requirement_id": "FR-PRF-001",
+      "actor": "User",
+      "story": "As a registered user, I want to manage my profile details, preferences, and default notification options, so that the application fits my personal workflow and layout preference."
+    },
+    {
+      "id": "US-PRF-002",
+      "requirement_id": "FR-PRF-002",
+      "actor": "Admin",
+      "story": "As a tenant administrator, I want to configure global team settings and corporate retention policies (e.g., delete meeting notes after 90 days), so that we adhere to organization-wide compliance mandates."
+    },
+    {
+      "id": "US-NOT-001",
+      "requirement_id": "FR-NOT-001",
+      "actor": "User",
+      "story": "As a user, I want to receive in-app and email notifications when I am assigned a task, mentioned in a decision, or when a meeting summary is ready, so that I am notified of important events in real time."
+    },
+    {
+      "id": "US-ADM-001",
+      "requirement_id": "FR-ADM-001",
+      "actor": "Admin",
+      "story": "As an IT administrator, I want an admin dashboard showing usage statistics (e.g., active users, transcription hours used) and system logs, so that I can monitor system usage, API token consumption, and audit operations."
+    },
+    {
+      "id": "US-ADM-002",
+      "requirement_id": "FR-ADM-002",
+      "actor": "Admin",
+      "story": "As a compliance auditor, I want a detailed audit trail of all AI summary runs, manual corrections, and fallback activations, so that we can review system behavior and trace decisions when data discrepancies arise."
+    },
+    {
+      "id": "US-RPT-001",
+      "requirement_id": "FR-RPT-001",
+      "actor": "User (Manager / Admin)",
+      "story": "As a team lead, I want basic team-level reports (e.g., meeting frequency, time saved, action item completion rate), so that I can evaluate team productivity and the ROI of using the meeting manager."
+    }
+  ]
+}

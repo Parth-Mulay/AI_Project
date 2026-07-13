@@ -1,0 +1,166 @@
+{
+  "requirements": [
+    {
+      "id": "FR-AUTH-001",
+      "name": "Email registration with verification",
+      "priority": "High",
+      "module": "Authentication & Authorization"
+    },
+    {
+      "id": "FR-AUTH-002",
+      "name": "SSO via Google Workspace and Azure AD",
+      "priority": "High",
+      "module": "Authentication & Authorization"
+    },
+    {
+      "id": "FR-AUTH-003",
+      "name": "Role-based access control",
+      "priority": "High",
+      "module": "Authentication & Authorization"
+    },
+    {
+      "id": "FR-DB-001",
+      "name": "Personalized dashboard showing recent meetings and pending actions",
+      "priority": "High",
+      "module": "Dashboard"
+    },
+    {
+      "id": "FR-MTG-001",
+      "name": "Create meetings persisting metadata",
+      "priority": "High",
+      "module": "Meeting CRUD"
+    },
+    {
+      "id": "FR-MTG-002",
+      "name": "Upload content (text, audio, docx, pdf) queuing transcription",
+      "priority": "High",
+      "module": "Meeting CRUD"
+    },
+    {
+      "id": "FR-MTG-003",
+      "name": "Edit meeting content with versioned edits",
+      "priority": "Medium",
+      "module": "Meeting CRUD"
+    },
+    {
+      "id": "FR-MTG-004",
+      "name": "Delete/Archive with retention policy enforcement",
+      "priority": "Medium",
+      "module": "Meeting CRUD"
+    },
+    {
+      "id": "FR-SEARCH-001",
+      "name": "Full-text search across title, body, summaries in <2s",
+      "priority": "High",
+      "module": "Meeting Search"
+    },
+    {
+      "id": "FR-SEARCH-002",
+      "name": "Semantic search using embeddings",
+      "priority": "Medium",
+      "module": "Meeting Search"
+    },
+    {
+      "id": "FR-AI-001",
+      "name": "Trigger Anthropic API for summaries & extractions",
+      "priority": "High",
+      "module": "AI Summary & Extraction"
+    },
+    {
+      "id": "FR-AI-002",
+      "name": "Show confidence and source excerpts",
+      "priority": "High",
+      "module": "AI Summary & Extraction"
+    },
+    {
+      "id": "FR-AI-003",
+      "name": "Fallback to extractive summarizer when AI unavailable",
+      "priority": "High",
+      "module": "AI Summary & Extraction"
+    },
+    {
+      "id": "FR-AI-004",
+      "name": "Re-run summary with different prompts",
+      "priority": "Medium",
+      "module": "AI Summary & Extraction"
+    },
+    {
+      "id": "FR-ACT-001",
+      "name": "Extract action items and suggest owners",
+      "priority": "High",
+      "module": "Action Items & Decisions"
+    },
+    {
+      "id": "FR-ACT-002",
+      "name": "Track action state and due dates",
+      "priority": "High",
+      "module": "Action Items & Decisions"
+    },
+    {
+      "id": "FR-ACT-003",
+      "name": "Send reminders via email/Slack",
+      "priority": "Medium",
+      "module": "Action Items & Decisions"
+    },
+    {
+      "id": "FR-TAG-001",
+      "name": "Tagging and categories for organization",
+      "priority": "Medium",
+      "module": "Tags & Categories"
+    },
+    {
+      "id": "FR-EXT-001",
+      "name": "Export summary to PDF/DOCX",
+      "priority": "High",
+      "module": "Export & Integration"
+    },
+    {
+      "id": "FR-EXT-002",
+      "name": "Push actions to Jira/Asana",
+      "priority": "Medium",
+      "module": "Export & Integration"
+    },
+    {
+      "id": "FR-EXT-003",
+      "name": "Post highlights to Slack/Teams",
+      "priority": "Medium",
+      "module": "Export & Integration"
+    },
+    {
+      "id": "FR-PRF-001",
+      "name": "User profile settings",
+      "priority": "Low",
+      "module": "Profile & Settings"
+    },
+    {
+      "id": "FR-PRF-002",
+      "name": "Team settings including retention",
+      "priority": "High",
+      "module": "Profile & Settings"
+    },
+    {
+      "id": "FR-NOT-001",
+      "name": "In-app and email notifications for actions",
+      "priority": "Medium",
+      "module": "Notifications"
+    },
+    {
+      "id": "FR-ADM-001",
+      "name": "Admin dashboard for usage and logs",
+      "priority": "Medium",
+      "module": "Admin & Reports"
+    },
+    {
+      "id": "FR-ADM-002",
+      "name": "Audit trail for AI/fallback decisions",
+      "priority": "High",
+      "module": "Admin & Reports"
+    },
+    {
+      "id": "FR-RPT-001",
+      "name": "Basic team-level reports",
+      "priority": "Low",
+      "module": "Reports & Analytics"
+    }
+  ]
+}

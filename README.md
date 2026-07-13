@@ -6,8 +6,8 @@
 
 The AI Meeting Notes Manager is an intelligent solution designed to help teams efficiently capture, organize, and extract insights from meeting recordings. This project demonstrates professional software architecture and clean coding practices with a focus on scalability and maintainability.
 
-**Current Phase:** Architecture Setup (Product Thinking)
-**Status:** ✅ Complete - Ready for Implementation
+**Current Phase:** Requirements & Specifications (Day 4)
+**Status:** ✅ Complete - Day 4 Requirements Analysis Completed
 
 ---
 
@@ -278,6 +278,47 @@ The second phase focused on AI-assisted software development practices, prompt e
 
 ---
 
+## Day 3 – Product Thinking & MVP Design Decisions
+
+The third phase focused on product ideation, user research, competitor evaluation, and defining MVP design choices for rule-based analysis.
+
+### Documentation
+
+- [Product Ideation Research](Day3_Docs/01_Product_Ideation_Research.md)
+- [User Research & Persona Study](Day3_Docs/02_User_Research_and_Persona_Study.md)
+- [Competitor Research](Day3_Docs/03_Competitor_Research.md)
+- [MVP Design Decisions](Day3_Docs/04_MVP_Design_Decisions.md)
+- [Product Thinking Learnings](Day3_Docs/05_Product_Thinking_Learnings.md)
+- [Research References](Day3_Docs/06_Research_References.md)
+- [Day 3 Readme](Day3_Docs/README.md)
+
+---
+
+## Day 4 – Requirements Analysis & Product Requirements
+
+The fourth phase focused on creating high-fidelity product requirements, user stories, acceptance criteria, priority modeling, gap analysis, and trace mapping.
+
+### Documentation
+
+- [01 User Stories](Day4_Docs/01_User_Stories.md)
+- [02 Acceptance Criteria](Day4_Docs/02_Acceptance_Criteria.md)
+- [03 MoSCoW Prioritization](Day4_Docs/03_MoSCoW_Prioritization.md)
+- [04 Requirement Gap Analysis](Day4_Docs/04_Requirement_Gap_Analysis.md)
+- [05 Product Requirements Document (PRD)](Day4_Docs/05_Product_Requirements_Document.md)
+- [06 Requirement Traceability Matrix](Day4_Docs/06_Requirement_Traceability_Matrix.md)
+- [07 Verification Checklist](Day4_Docs/07_Verification_Checklist.md)
+
+### Technical Metadata
+
+System-parsable requirements schemas are saved in the `docs/requirements/` directory:
+- [Requirements Index JSON](docs/requirements/requirements_index.json)
+- [User Stories JSON](docs/requirements/user_stories.json)
+- [Acceptance Criteria JSON](docs/requirements/acceptance_criteria.json)
+- [Feature Priority JSON](docs/requirements/feature_priority.json)
+- [Traceability JSON](docs/requirements/traceability.json)
+
+---
+
 ## Future Roadmap
 
 ### Phase 2: Core Implementation
@@ -323,8 +364,8 @@ This project adheres to the following standards:
 
 **Project Type**: AI Software Engineering Capstone
 **Duration**: 14 Days
-**Phase**: 3/14 (Architecture Setup)
-**Timeline**: Days 1-3 Complete, Days 4-14 Upcoming
+**Phase**: 4/14 (Requirements & Specifications)
+**Timeline**: Days 1-4 Complete, Days 5-14 Upcoming
 
 ---
 
@@ -367,5 +408,5 @@ For questions or issues, please refer to:
 
 ---
 
-**Last Updated**: 2024
-**Status**: Architecture Setup Complete ✅
+**Last Updated**: 2026
+**Status**: Requirements & Specifications Complete ✅

@@ -1,0 +1,40 @@
+{
+  "must_have": [
+    "FR-AUTH-001",
+    "FR-AUTH-003",
+    "FR-DB-001",
+    "FR-MTG-001",
+    "FR-MTG-002",
+    "FR-SEARCH-001",
+    "FR-AI-001",
+    "FR-AI-003",
+    "FR-ACT-001",
+    "FR-ACT-002",
+    "FR-EXT-001"
+  ],
+  "should_have": [
+    "FR-AUTH-002",
+    "FR-MTG-003",
+    "FR-MTG-004",
+    "FR-AI-002",
+    "FR-ACT-003",
+    "FR-TAG-001",
+    "FR-EXT-003",
+    "FR-PRF-002",
+    "FR-NOT-001",
+    "FR-ADM-002"
+  ],
+  "could_have": [
+    "FR-SEARCH-002",
+    "FR-AI-004",
+    "FR-EXT-002",
+    "FR-PRF-001",
+    "FR-ADM-001",
+    "FR-RPT-001"
+  ],
+  "wont_have": [
+    "FR-REC-001",
+    "FR-MOB-001",
+    "FR-ANL-001"
+  ]
+}
