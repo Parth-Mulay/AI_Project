@@ -6,8 +6,8 @@
 
 The AI Meeting Notes Manager is an intelligent solution designed to help teams efficiently capture, organize, and extract insights from meeting recordings. This project demonstrates professional software architecture and clean coding practices with a focus on scalability and maintainability.
 
-**Current Phase:** Requirements & Specifications (Day 4)
-**Status:** ✅ Complete - Day 4 Requirements Analysis Completed
+**Current Phase:** UI/UX Prototyping (Day 5)
+**Status:** ✅ Complete - Day 5 UI/UX Design and Prototype Upgrade Completed
 
 ---
 
@@ -319,6 +319,20 @@ System-parsable requirements schemas are saved in the `docs/requirements/` direc
 
 ---
 
+## Day 5 – UI/UX Prototyping & Design System
+
+The fifth phase focused on translating requirements into a modern SaaS user interface design, outlining the style system, mapping screen flows, and upgrading the CLI prototype to an interactive multi-screen console dashboard.
+
+### Documentation
+
+- [01 Design System](Day5_Docs/01_Design_System.md)
+- [02 User Flow & Wireframe Notes](Day5_Docs/02_User_Flow_and_Wireframe_Notes.md)
+- [03 Figma AI Prompts & Prototype Notes](Day5_Docs/03_Figma_AI_Prompts_and_Prototype_Notes.md)
+- [04 Screen Traceability Matrix](Day5_Docs/04_Screen_Traceability.md)
+- [05 Design Decisions Rationale](Day5_Docs/05_Design_Decisions.md)
+
+---
+
 ## Future Roadmap
 
 ### Phase 2: Core Implementation
@@ -364,8 +378,8 @@ This project adheres to the following standards:
 
 **Project Type**: AI Software Engineering Capstone
 **Duration**: 14 Days
-**Phase**: 4/14 (Requirements & Specifications)
-**Timeline**: Days 1-4 Complete, Days 5-14 Upcoming
+**Phase**: 5/14 (UI/UX Prototyping)
+**Timeline**: Days 1-5 Complete, Days 6-14 Upcoming
 
 ---
 
@@ -409,4 +423,4 @@ For questions or issues, please refer to:
 ---
 
 **Last Updated**: 2026
-**Status**: Requirements & Specifications Complete ✅
+**Status**: UI/UX Prototyping Phase Complete ✅
