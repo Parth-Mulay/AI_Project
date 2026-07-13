@@ -10,12 +10,13 @@ import tempfile
 import zipfile
 import pytest
 
-# Add src directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+# Add both root and src directory to path to support static analysis and runtime relative imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from models.meeting_model import Meeting
-from services.detection_service import DetectionService
-from app import MeetingNotesApp
+from src.models.meeting_model import Meeting
+from src.services.detection_service import DetectionService
+from src.app import MeetingNotesApp
 
 
 def create_mock_docx(file_path: str, text: str) -> None:
