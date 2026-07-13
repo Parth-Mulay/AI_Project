@@ -338,6 +338,15 @@ The fifth phase focused on translating requirements into a modern SaaS user inte
 - **Robust File Validation:** Enforces max file limits (10MB for documents, 100MB for audio), detects empty documents, catches corruption exceptions, and identifies password-protected files.
 - **Verification Tests:** Added a dedicated test suite [test_document_analysis.py](tests/test_document_analysis.py) asserting schema safety, extraction reliability, and proper validation handling.
 
+### Professional Web Dashboard Prototype
+
+We have implemented a professional web-based user interface representing the Figma design system specifications inside [src/web/](src/web/):
+- **[index.html](src/web/index.html):** The structure representing the dashboard layout grid, incorporating left navigation sidebars, statistics telemetry grids, active wave indicator captures, drag-and-drop file uploaders, tab editors, and workspace directories.
+- **[style.css](src/web/style.css):** The visual theme implementing custom variables, dark color tokens, geometric typography (Outfit & Inter), glassmorphism backdrops, pulsing record animations, and role-restricted settings blocker overlays.
+- **[app.js](src/web/app.js):** The logic orchestrating SPA routing, client-side FileReader text doc parser, live note analyzer with floating AI toast cards, Admin/Member role-based permission switches, and native browser-triggered Markdown exporter downloads.
+
+To run, simply open [index.html](src/web/index.html) inside any standard web browser.
+
 ---
 
 ## Future Roadmap

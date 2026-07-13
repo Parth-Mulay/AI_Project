@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Meeting Notes Manager - SaaS Dashboard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Notification Toasts Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Main Layout Grid -->
+    <div class="app-container">
+
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="ai-sparkle">🤖</span>
+                <h1>AI NOTES</h1>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-target="view-dashboard">
+                        <span class="nav-icon">📊</span> Dashboard
+                    </li>
+                    <li class="nav-item" data-target="view-live">
+                        <span class="nav-icon">🎙️</span> Live Capture
+                    </li>
+                    <li class="nav-item" data-target="view-upload">
+                        <span class="nav-icon">📤</span> Upload File
+                    </li>
+                    <li class="nav-item" data-target="view-archive">
+                        <span class="nav-icon">📂</span> Meetings Archive
+                    </li>
+                    <li class="nav-item" data-target="view-workspace">
+                        <span class="nav-icon">👥</span> Workspace Directory
+                    </li>
+                    <li class="nav-item" data-target="view-settings">
+                        <span class="nav-icon">⚙️</span> System Settings
+                    </li>
+                    <li class="nav-item" data-target="view-onboarding">
+                        <span class="nav-icon">📖</span> Onboarding Tour
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Tag Profile Section -->
+            <div class="sidebar-user" id="sidebar-user-toggle">
+                <div class="user-avatar">P</div>
+                <div class="user-details">
+                    <span class="user-name">Priya</span>
+                    <span class="user-role-badge">Member</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-canvas">
+
+            <!-- Top Header Bar -->
+            <header class="top-bar">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="global-search-input" placeholder="Search meetings or keywords (Ctrl+K)...">
+                    <span class="search-hint">Ctrl+K</span>
+                </div>
+
+                <div class="top-bar-actions">
+                    <!-- Notifications Trigger -->
+                    <button class="top-btn" id="btn-notifications" aria-label="Notifications Drawer">
+                        🔔 <span class="notification-dot" id="noti-dot"></span>
+                    </button>
+                    <!-- Role Quick Modifier Toggle -->
+                    <button class="top-btn role-toggle-btn" id="btn-role-toggle">
+                        Active Role: <strong id="current-role-txt">MEMBER</strong>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Notification Drawer (Slide-in) -->
+            <div id="notification-drawer" class="notification-drawer hidden">
+                <div class="drawer-header">
+                    <h3>Notifications Drawer</h3>
+                    <button id="close-drawer-btn" class="close-btn">&times;</button>
+                </div>
+                <div class="drawer-content" id="notification-list">
+                    <p class="empty-noti">No new notifications.</p>
+                </div>
+            </div>
+
+            <!-- Page Views Content Canvas -->
+            <div class="canvas-content">
+
+                <!-- VIEW 1: DASHBOARD HOME -->
+                <section id="view-dashboard" class="view-panel">
+                    <div class="view-header">
+                        <h2>Workspace Telemetry Dashboard</h2>
+                        <p class="subtitle">Real-time statistics and summary tracking across your organization</p>
+                    </div>
+
+                    <!-- Statistics Grid Card Telemetry -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-icon">⏱️</span>
+                            <div class="stat-data">
+                                <span class="stat-num" id="stat-time-saved">5.0 hrs</span>
+                                <span class="stat-lbl">Time Saved This Week</span>
+                            </div>
+                            <span class="stat-change success">+15% vs last week</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">📝</span>
+                            <div class="stat-data">
+                                <span class="stat-num" id="stat-meetings-count">2</span>
+                                <span class="stat-lbl">Meetings Analyzed</span>
+                            </div>
+                            <span class="stat-change info">99.9% AI accuracy</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">🎯</span>
+                            <div class="stat-data">
+                                <span class="stat-num" id="stat-actions-pending">3</span>
+                                <span class="stat-lbl">Pending Actions Checklist</span>
+                            </div>
+                            <span class="stat-change warning">88% completion</span>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Workspace Split Panels -->
+                    <div class="dashboard-split">
+                        
+                        <!-- Left Panel: Recent Meetings -->
+                        <div class="split-card recent-meetings-card">
+                            <div class="card-header">
+                                <h3>Recent Meetings</h3>
+                                <button class="card-action-btn" id="btn-goto-archive">View All</button>
+                            </div>
+                            <div class="table-container">
+                                <table class="dashboard-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Meeting Title</th>
+                                            <th>Date</th>
+                                            <th>Participants</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-meetings-table-body">
+                                        <!-- Populated dynamically via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Checklist Board -->
+                        <div class="split-card action-checklist-card">
+                            <div class="card-header">
+                                <h3>Aggregated Action Items</h3>
+                            </div>
+                            <div class="checklist-container" id="aggregated-checklist">
+                                <!-- Populated dynamically via JS -->
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- VIEW 2: LIVE CAPTURE -->
+                <section id="view-live" class="view-panel hidden">
+                    <div class="view-header">
+                        <h2>Live Meeting Dialogue Capture</h2>
+                        <p class="subtitle">Record conversations and detect immediate AI highlights in real time</p>
+                    </div>
+
+                    <div class="live-capture-grid">
+                        
+                        <!-- Setup and Dialog Input Panel -->
+                        <div class="capture-control-card">
+                            <div class="live-setup-form" id="live-setup-container">
+                                <div class="form-group">
+                                    <label for="live-title">Meeting Title</label>
+                                    <input type="text" id="live-title" placeholder="e.g. Weekly Standup - Week 15">
+                                </div>
+                                <div class="form-group">
+                                    <label for="live-participants">Participants (Comma separated)</label>
+                                    <input type="text" id="live-participants" placeholder="e.g. Priya, Rahul, Amit">
+                                </div>
+                                <button class="btn btn-primary" id="btn-start-live">🎙️ Start Capture Session</button>
+                            </div>
+
+                            <div class="live-active-container hidden" id="live-active-container">
+                                <div class="live-telemetry">
+                                    <div class="recording-indicator">
+                                        <span class="pulsing-red-dot"></span>
+                                        <span id="recording-timer">00:00</span>
+                                    </div>
+                                    <!-- Animated Waveform SVG indicator -->
+                                    <div class="waveform-animation">
+                                        <span class="wave-bar"></span>
+                                        <span class="wave-bar"></span>
+                                        <span class="wave-bar"></span>
+                                        <span class="wave-bar"></span>
+                                        <span class="wave-bar"></span>
+                                    </div>
+                                    <button class="btn btn-danger" id="btn-stop-live">⏹️ Stop & Generate Summary</button>
+                                </div>
+
+                                <div class="transcript-feed-container">
+                                    <div class="transcript-scroller" id="live-transcript-feed">
+                                        <!-- Transcript lines -->
+                                    </div>
+                                    <div class="transcript-input-bar">
+                                        <input type="text" id="live-message-input" placeholder="Type dialogue (format: Name: message) and press Enter...">
+                                        <button id="btn-send-message">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real-time AI Insights sidebar -->
+                        <div class="live-insights-card">
+                            <div class="card-header">
+                                <h3>🤖 Real-Time AI Insights</h3>
+                            </div>
+                            <div class="insights-scroller" id="live-insights-feed">
+                                <p class="empty-feed">Insights will appear here in real time as dialogue is typed...</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- VIEW 3: UPLOAD FILE -->
+                <section id="view-upload" class="view-panel hidden">
+                    <div class="view-header">
+                        <h2>Upload Meeting Audio & Documents</h2>
+                        <p class="subtitle">Extract transcripts and AI insights dynamically from standard file extensions</p>
+                    </div>
+
+                    <div class="upload-container">
+                        <div class="drag-drop-zone" id="drop-zone">
+                            <span class="upload-cloud-icon">📤</span>
+                            <h3>Drag & Drop Meeting Files Here</h3>
+                            <p>or click to browse your local filesystem</p>
+                            <span class="formats-lbl">Supported: .docx, .pdf, .txt, .mp3, .wav (Max size: 10MB docs, 100MB audio)</span>
+                            <input type="file" id="file-uploader" style="display: none;" accept=".docx,.pdf,.txt,.mp3,.wav">
+                        </div>
+
+                        <div class="upload-log-container hidden" id="upload-log-container">
+                            <div class="file-details-card">
+                                <div class="file-info">
+                                    <span class="file-icon" id="uploaded-file-icon">📄</span>
+                                    <div>
+                                        <h4 id="uploaded-file-name">filename.docx</h4>
+                                        <span id="uploaded-file-size">1.2 MB</span>
+                                    </div>
+                                </div>
+                                <span class="badge" id="upload-status-badge">Processing</span>
+                            </div>
+
+                            <!-- Real-time AI processing stages loading screen -->
+                            <div class="pipeline-loader">
+                                <h3 class="loader-header">AI Synthesis Pipeline</h3>
+                                <ul class="loader-stages">
+                                    <li class="stage-item" id="stage-read">
+                                        <span class="stage-indicator">⏳</span> Reading document...
+                                    </li>
+                                    <li class="stage-item" id="stage-extract">
+                                        <span class="stage-indicator">⏳</span> Extracting text...
+                                    </li>
+                                    <li class="stage-item" id="stage-analyze">
+                                        <span class="stage-indicator">⏳</span> Analyzing meeting...
+                                    </li>
+                                    <li class="stage-item" id="stage-summary">
+                                        <span class="stage-indicator">⏳</span> Generating summary...
+                                    </li>
+                                    <li class="stage-item" id="stage-actions">
+                                        <span class="stage-indicator">⏳</span> Extracting action items...
+                                    </li>
+                                    <li class="stage-item" id="stage-complete">
+                                        <span class="stage-indicator">⏳</span> Completed.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 4: ARCHIVE & MEETING DETAILS TAB VIEW -->
+                <section id="view-archive" class="view-panel hidden">
+                    <div class="view-header">
+                        <h2>Meetings Archive & Analytics</h2>
+                        <p class="subtitle">Search, filter, and inspect summary outcomes of previous meetings</p>
+                    </div>
+
+                    <!-- ARCHIVE GRID PANEL (LIST) -->
+                    <div id="archive-list-panel">
+                        <div class="archive-filters">
+                            <div class="filter-search">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="archive-search-input" placeholder="Search title or transcripts...">
+                            </div>
+                            <div class="filter-category">
+                                <label for="archive-tag-filter">Filter Tag</label>
+                                <select id="archive-tag-filter">
+                                    <option value="all">All Meetings</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="government">Government</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="meetings-grid" id="meetings-grid-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- MEETING DETAILS PANEL (TABS) -->
+                    <div id="archive-details-panel" class="hidden">
+                        <div class="details-header">
+                            <button class="btn btn-secondary btn-small" id="btn-back-to-archive">🔙 Back to Archive</button>
+                            <div class="title-row">
+                                <h3 id="details-meeting-title">Sprint Planning - Week 15</h3>
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary btn-small" id="btn-export-markdown">📥 Export Markdown</button>
+                                </div>
+                            </div>
+                            <div class="details-meta-row">
+                                <span id="details-meeting-date">📆 2026-07-13</span>
+                                <span id="details-meeting-duration">⏱️ 0 mins</span>
+                                <span id="details-meeting-participants">👥 Priya, Rahul, Amit</span>
+                            </div>
+                        </div>
+
+                        <!-- Interactive TAB switches -->
+                        <div class="tabs-navigator">
+                            <button class="tab-btn active" data-tab="tab-summary">📄 Summary</button>
+                            <button class="tab-btn" data-tab="tab-actions">🎯 Action Items</button>
+                            <button class="tab-btn" data-tab="tab-decisions">🏁 Decisions Log</button>
+                            <button class="tab-btn" data-tab="tab-timeline">📝 Timeline Transcript</button>
+                        </div>
+
+                        <div class="tabs-container">
+                            <!-- Summary Tab -->
+                            <div class="tab-pane active" id="tab-summary">
+                                <div class="markdown-preview" id="details-summary-content">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Action Items Tab -->
+                            <div class="tab-pane" id="tab-actions">
+                                <div class="checklist-container" id="details-actions-list">
+                                    <!-- Dynamic Checklist -->
+                                </div>
+                            </div>
+
+                            <!-- Decisions Tab -->
+                            <div class="tab-pane" id="tab-decisions">
+                                <ul class="decisions-bullet-list" id="details-decisions-list">
+                                    <!-- Dynamic Bullet List -->
+                                </ul>
+                            </div>
+
+                            <!-- Transcript Timeline Tab -->
+                            <div class="tab-pane" id="tab-timeline">
+                                <div class="transcript-timeline-container" id="details-transcript-list">
+                                    <!-- Dynamic Messages -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 5: WORKSPACE RBAC DIRECTORY -->
+                <section id="view-workspace" class="view-panel hidden">
+                    <div class="view-header">
+                        <h2>Workspace Directory & Permissions</h2>
+                        <p class="subtitle">View team members and audit security logs</p>
+                    </div>
+
+                    <div class="workspace-grid">
+                        
+                        <!-- Member List Card -->
+                        <div class="workspace-card">
+                            <div class="card-header">
+                                <h3>Team Directory</h3>
+                            </div>
+                            <div class="directory-container">
+                                <ul class="directory-list">
+                                    <li class="directory-item">
+                                        <div class="member-avatar">P</div>
+                                        <div class="member-info">
+                                            <h4>Priya (You)</h4>
+                                            <p>priya@company.com</p>
+                                        </div>
+                                        <span class="user-role-badge" id="directory-user-role">Member</span>
+                                    </li>
+                                    <li class="directory-item">
+                                        <div class="member-avatar">R</div>
+                                        <div class="member-info">
+                                            <h4>Rahul</h4>
+                                            <p>rahul@company.com</p>
+                                        </div>
+                                        <span class="user-role-badge">Member</span>
+                                    </li>
+                                    <li class="directory-item">
+                                        <div class="member-avatar">A</div>
+                                        <div class="member-info">
+                                            <h4>Amit</h4>
+                                            <p>amit@company.com</p>
+                                        </div>
+                                        <span class="user-role-badge">Admin</span>
+                                    </li>
+                                    <li class="directory-item">
+                                        <div class="member-avatar">B</div>
+                                        <div class="member-info">
+                                            <h4>Brian</h4>
+                                            <p>brian@company.com</p>
+                                        </div>
+                                        <span class="user-role-badge">Admin</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Security Audit Logs (Role Gated) -->
+                        <div class="workspace-card audit-logs-card relative-gated">
+                            <div class="card-header">
+                                <h3>Security Audit Logs</h3>
+                            </div>
+                            
+                            <!-- Locked Overlay dialog -->
+                            <div class="locked-overlay" id="audit-locked-overlay">
+                                <span class="lock-icon">🔒</span>
+                                <h4>Access Restricted to Administrator Role</h4>
+                                <p>Toggle active role to Admin in the top-right header to view compliance logs.</p>
+                            </div>
+
+                            <div class="audit-logs-container" id="audit-logs-container">
+                                <ul class="audit-list">
+                                    <li class="audit-item">
+                                        <span class="audit-timestamp">[2026-07-13 09:42:01]</span>
+                                        <span class="audit-event">SEC-AUDIT: User login verified via Google Workspace SSO.</span>
+                                    </li>
+                                    <li class="audit-item">
+                                        <span class="audit-timestamp">[2026-07-13 09:46:12]</span>
+                                        <span class="audit-event">SEC-AUDIT: Default workspace retention sweep executed (90 days).</span>
+                                    </li>
+                                    <li class="audit-item">
+                                        <span class="audit-timestamp">[2026-07-13 10:15:30]</span>
+                                        <span class="audit-event">SEC-AUDIT: Active webhook settings modified by Amit.</span>
+                                    </li>
+                                    <li class="audit-item">
+                                        <span class="audit-timestamp">[2026-07-13 11:10:45]</span>
+                                        <span class="audit-event">SEC-AUDIT: Export token requested for Sprint Planning summary.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- VIEW 6: SYSTEM INTEGRATIONS -->
+                <section id="view-settings" class="view-panel hidden">
+                    <div class="view-header">
+                        <h2>System Configurations & Settings</h2>
+                        <p class="subtitle">Adjust retention windows, toggles, and mock API modes</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        
+                        <!-- Compliance Configs (Admin Locked) -->
+                        <div class="settings-card relative-gated">
+                            <div class="card-header">
+                                <h3>Compliance & Retention</h3>
+                            </div>
+                            <!-- Lock Overlay -->
+                            <div class="locked-overlay" id="settings-locked-overlay">
+                                <span class="lock-icon">🔒</span>
+                                <h4>Access Restricted to Administrator Role</h4>
+                                <p>Toggle active role to Admin in the top-right header to modify compliance settings.</p>
+                            </div>
+
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label for="settings-retention">Default Data Retention Period (Days)</label>
+                                    <input type="number" id="settings-retention" value="90" min="30" max="365">
+                                    <span class="input-hint">Default retention cycle for meeting notes before deletion sweeps.</span>
+                                </div>
+                                <button class="btn btn-primary" id="btn-save-retention">Save Policy Changes</button>
+                            </div>
+                        </div>
+
+                        <!-- Integration Toggles -->
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3>Integrations & Fallbacks</h3>
+                            </div>
+                            <div class="settings-options">
+                                <div class="toggle-option">
+                                    <div class="option-info">
+                                        <h4>Slack Webhook Sync</h4>
+                                        <p>Post action item summaries to #team-sync on Slack automatically.</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="settings-toggle-slack" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-option">
+                                    <div class="option-info">
+                                        <h4>API Fallback Outage Simulation</h4>
+                                        <p>Trigger Claude API timeout to display the local rule-based summary warning banner.</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="settings-toggle-fallback">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- VIEW 7: ONBOARDING TOUR GUIDE -->
+                <section id="view-onboarding" class="view-panel hidden">
+                    <div class="view-header">
+                        <h2>SaaS Interface Guided Onboarding</h2>
+                        <p class="subtitle">Understand the layout architecture, design system, and explainability cards</p>
+                    </div>
+
+                    <div class="onboarding-tour-container">
+                        
+                        <div class="tour-feature-grid">
+                            <div class="feature-item">
+                                <span class="feat-icon">📑</span>
+                                <h4>Split Layout Paradigm</h4>
+                                <p>The split-panel layout isolates workspace analytics, dashboard stats, and archives in the sidebar navigation, providing clean canvas focus on detail tabs.</p>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feat-icon">🤖</span>
+                                <h4>Trust & Explainability Badges</h4>
+                                <p>All AI-extracted decision chips and action items carry dynamic color-coded confidence percentages and direct transcript context mapping for safety.</p>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feat-icon">🛡️</span>
+                                <h4>Local Fallback Protection</h4>
+                                <p>If cloud APIs go offline, a prominent fallback banner details the limits, gracefully degrading to local keyword summaries without blocking document access.</p>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feat-icon">🔒</span>
+                                <h4>Role-Based Access (RBAC)</h4>
+                                <p>Sensitive policies (retention parameters and compliance audit lists) are locked from standard members, displaying a custom permission overlay.</p>
+                            </div>
+                        </div>
+
+                        <div class="tour-cta-block">
+                            <h3>Ready to inspect the prototype?</h3>
+                            <p>Capture a meeting note, or upload a transcript file to test the dynamic pipeline.</p>
+                            <button class="btn btn-primary" id="btn-tour-start">Return to Dashboard</button>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
