@@ -110,10 +110,6 @@ h1, h2, h3, h4, .stat-num {
     font-size: 20px;
 }
 
-.sidebar-nav ul {
-    list-style: none;
-}
-
 .nav-item {
     display: flex;
     align-items: center;
@@ -126,12 +122,14 @@ h1, h2, h3, h4, .stat-num {
     transition: all 200ms ease;
     margin-bottom: var(--space-xs);
     font-size: 13px;
+    text-decoration: none; /* Removes browser default link underlines */
 }
 
 .nav-item:hover {
     background-color: var(--color-surface-hover);
     color: var(--color-text-primary);
     transform: translateX(4px);
+    text-decoration: none;
 }
 
 .nav-item.active {
@@ -140,6 +138,7 @@ h1, h2, h3, h4, .stat-num {
     font-weight: 600;
     border-left: 3px solid var(--color-accent-purple);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    text-decoration: none;
 }
 
 .nav-new-chip {
