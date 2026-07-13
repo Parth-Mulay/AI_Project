@@ -6,8 +6,8 @@
 
 The AI Meeting Notes Manager is an intelligent solution designed to help teams efficiently capture, organize, and extract insights from meeting recordings. This project demonstrates professional software architecture and clean coding practices with a focus on scalability and maintainability.
 
-**Current Phase:** UI/UX Prototyping (Day 5)
-**Status:** ✅ Complete - Day 5 UI/UX Design and Prototype Upgrade Completed
+**Current Phase:** Client Review & Approval (Day 6)
+**Status:** ✅ Complete - Day 6 Client Proposal & Sign-off Docs Prepared
 
 ---
 
@@ -346,6 +346,22 @@ We have implemented a professional web-based user interface representing the Fig
 - **[app.js](src/web/app.js):** The logic orchestrating SPA routing, client-side FileReader text doc parser, live note analyzer with floating AI toast cards, Admin/Member role-based permission switches, and native browser-triggered Markdown exporter downloads.
 
 To run, simply open [index.html](src/web/index.html) inside any standard web browser.
+
+---
+
+## Day 6 – Client Proposal & Project Sign-Off
+
+The sixth phase focused on preparing all corporate communication, project proposal, effort estimation, and approval materials to secure client sign-off prior to launching full-scale implementation.
+
+### Documentation
+
+- [01 Client Proposal](Day6_Docs/01_Client_Proposal.md): Detailed consulting proposal containing executive summary, scope boundaries, timeline milestones, and risk assessment.
+- [02 Client-Friendly PRD](Day6_Docs/02_Client_Friendly_PRD.md): Simplified requirements detailing business ROI, team productivity gains, and Continuous Offline Service Protection.
+- [03 Effort Estimation](Day6_Docs/03_Effort_Estimation.md): Multi-phase development breakdown (Discovery, Design, AI, DB, QA, Buffer) with explicit resource assumptions.
+- [04 Demo Script](Day6_Docs/04_Demo_Script.md): Speaking guide and click-by-click presenter workflow for live client system demonstrations.
+- [05 Client FAQ & Objection Handling](Day6_Docs/05_Client_FAQ_and_Objections.md): Reassuring answers resolving security, scale, accuracy, offline capability, and integration objections.
+- [06 Project Sign-Off Checklist](Day6_Docs/06_Project_Signoff_Checklist.md): Official document mapping requirements approval and stakeholder signature blocks.
+- [07 Follow-Up Email Template](Day6_Docs/07_Followup_Email.md): Email draft summarizing walkthrough outcomes, client decisions, and immediate next steps.
 
 ---
 
