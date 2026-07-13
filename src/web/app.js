@@ -2,75 +2,17 @@
    AI MEETING NOTES MANAGER - WEB FRONTEND CONTROLLER
    ==================================================== */
 
-// Initial Seed Data for Archive
+// Initial Seed Data matching the Figma Mockup
 let meetings = [
     {
         id: "1",
-        title: "Sprint Planning - Week 14",
-        date: "2026-07-06",
-        duration: "30 minutes",
-        participants: ["Rahul", "Priya", "Amit"],
-        tags: ["engineering"],
-        summary: `## Executive Summary
-Rahul confirmed that the core authentication module is fully completed. The team discussed security configurations and resolved to implement JWT-based token management for cross-origin compliance.
-
-## Key Discussion Points
-- Authentication modules development cycle complete.
-- Migration protocols and token setups.
-- Database mapping rules.
-
-## Risks
-- Need to align schemas before staging deployments.
-
-## Next Steps
-- Rahul to run integrity audits on endpoints.`,
-        actionItems: [
-            { task: "Rahul will review the database API schema tomorrow.", owner: "Rahul", deadline: "Tomorrow", status: "Pending" },
-            { task: "Priya will deploy the cache layer by Friday.", owner: "Priya", deadline: "Friday", status: "Pending" }
-        ],
-        decisions: [
-            "We decided to use JWT for token management."
-        ],
-        messages: [
-            { speaker: "Rahul", content: "Authentication module is completed." },
-            { speaker: "Priya", content: "We decided to use JWT for tokens." },
-            { speaker: "Amit", content: "Rahul will review the API tomorrow." }
-        ]
-    },
-    {
-        id: "2",
-        title: "Marketing Alignment Call",
-        date: "2026-07-10",
-        duration: "15 minutes",
-        participants: ["Brian", "Priya"],
-        tags: ["marketing"],
-        summary: `## Executive Summary
-Brian raised a compliance concern regarding the deployment server's resource constraints. Priya agreed to conduct a thorough security assessment prior to launch.
-
-## Key Discussion Points
-- Server capability reviews.
-- Performance profiling checks.
-
-## Risks
-- Blocker: Deployment server has limited RAM allocation.`,
-        actionItems: [
-            { task: "Priya will conduct a security review before launch.", owner: "Priya", deadline: "before launch", status: "Pending" }
-        ],
-        decisions: [
-            "Agreed to hold release updates until performance profiles are signed off."
-        ],
-        messages: [
-            { speaker: "Brian", content: "Risk identified - deployment server has limited resources." },
-            { speaker: "Priya", content: "Need to conduct a security review before launch." }
-        ]
-    },
-    {
-        id: "3",
         title: "Government Planning Sync - 2027 Agenda",
         date: "2026-07-13",
+        time: "10:00 AM",
         duration: "45 minutes",
         participants: ["Sharma", "Iyer", "Khan", "Deshmukh", "Patel"],
         tags: ["government"],
+        status: "Analyzed",
         summary: `## Executive Summary
 All departments aligned key projects under the technological growth agenda. Major agreements included a 20% budget expansion for clean energy and digital code basics integration.
 
@@ -85,9 +27,9 @@ All departments aligned key projects under the technological growth agenda. Majo
 ## Next Steps
 - Form a clinical task force to assess staffing quotas.`,
         actionItems: [
-            { task: "Task force will be formed to assess rural healthcare gaps within three months.", owner: "Iyer", deadline: "within three months", status: "Pending" },
-            { task: "A feasibility study on AI driven traffic management will be commissioned.", owner: "Deshmukh", deadline: "December 2027", status: "Pending" },
-            { task: "Ministries will submit integrated action plans by March 2027.", owner: "Sharma", deadline: "March 2027", status: "Pending" }
+            { task: "Task force will be formed to assess rural healthcare gaps within three months.", owner: "Iyer", deadline: "Oct 13", priority: "medium", status: "Pending" },
+            { task: "A feasibility study on AI driven traffic management will be commissioned.", owner: "Deshmukh", deadline: "Dec 20", priority: "low", status: "Pending" },
+            { task: "Ministries will submit integrated action plans by March 2027.", owner: "Sharma", deadline: "Mar 30", priority: "low", status: "Pending" }
         ],
         decisions: [
             "Launch a pilot program in 10 districts integrating coding and AI basics into curricula.",
@@ -98,6 +40,102 @@ All departments aligned key projects under the technological growth agenda. Majo
             { speaker: "Iyer", content: "Rural hospitals require immediate upgrades and staffing." },
             { speaker: "Khan", content: "Digital literacy programs should be expanded." }
         ]
+    },
+    {
+        id: "2",
+        title: "Marketing Alignment Call",
+        date: "2026-07-10",
+        time: "02:30 PM",
+        duration: "20 minutes",
+        participants: ["Brian", "Priya"],
+        tags: ["marketing"],
+        status: "Analyzed",
+        summary: `## Executive Summary
+Brian raised a compliance concern regarding the deployment server's resource constraints. Priya agreed to conduct a thorough security assessment prior to launch.
+
+## Key Discussion Points
+- Server capability reviews.
+- Performance profiling checks.
+
+## Risks
+- Blocker: Deployment server has limited RAM allocation.`,
+        actionItems: [
+            { task: "Priya will conduct a security review before launch.", owner: "Priya", deadline: "Jul 22", priority: "medium", status: "Pending" }
+        ],
+        decisions: [
+            "Agreed to hold release updates until performance profiles are signed off."
+        ],
+        messages: [
+            { speaker: "Brian", content: "Risk identified - deployment server has limited resources." },
+            { speaker: "Priya", content: "Need to conduct a security review before launch." }
+        ]
+    },
+    {
+        id: "3",
+        title: "Sprint Planning - Week 14",
+        date: "2026-07-06",
+        time: "11:00 AM",
+        duration: "30 minutes",
+        participants: ["Rahul", "Priya", "Amit"],
+        tags: ["engineering"],
+        status: "Analyzed",
+        summary: `## Executive Summary
+Rahul confirmed that the core authentication module is fully completed. The team discussed security configurations and resolved to implement JWT-based token management for cross-origin compliance.
+
+## Key Discussion Points
+- Authentication modules development cycle complete.
+- Migration protocols and token setups.
+- Database mapping rules.
+
+## Risks
+- Need to align schemas before staging deployments.
+
+## Next Steps
+- Rahul to run integrity audits on endpoints.`,
+        actionItems: [
+            { task: "Rahul will review the database API schema tomorrow.", owner: "Rahul", deadline: "Jul 20", priority: "high", status: "Pending" },
+            { task: "Priya will deploy the cache layer by Friday.", owner: "Priya", deadline: "Jul 18", priority: "high", status: "Pending" }
+        ],
+        decisions: [
+            "We decided to use JWT for token management."
+        ],
+        messages: [
+            { speaker: "Rahul", content: "Authentication module is completed." },
+            { speaker: "Priya", content: "We decided to use JWT for tokens." },
+            { speaker: "Amit", content: "Rahul will review the API tomorrow." }
+        ]
+    },
+    {
+        id: "4",
+        title: "Client Onboarding Discussion",
+        date: "2026-07-05",
+        time: "04:00 PM",
+        duration: "45 minutes",
+        participants: ["Client", "Partner"],
+        tags: ["engineering"],
+        status: "Processing",
+        summary: `## Executive Summary\nClient review onboarding requirements.\n\n## Key Outcomes\nDynamic analysis processing.`,
+        actionItems: [
+            { task: "Approve the new onboarding flow wireframes.", owner: "Designer", deadline: "Jul 21", priority: "low", status: "Pending" }
+        ],
+        decisions: [],
+        messages: [
+            { speaker: "Client", content: "We should start the deployment draft." }
+        ]
+    },
+    {
+        id: "5",
+        title: "Product Roadmap Review",
+        date: "2026-07-04",
+        time: "09:30 AM",
+        duration: "60 minutes",
+        participants: ["Priya", "Brian", "Amit"],
+        tags: ["engineering"],
+        status: "Analyzed",
+        summary: `## Executive Summary\nReviewed roadmap items for Q3/Q4.`,
+        actionItems: [],
+        decisions: [],
+        messages: []
     }
 ];
 
@@ -107,9 +145,10 @@ let isRecording = false;
 let recordingTimer = null;
 let recordingSeconds = 0;
 let currentLiveMeeting = null;
+let selectedPriority = "all";
 let notifications = [
     { text: "Welcome to AI Meeting Notes Manager Dashboard!", time: "Just now" },
-    { text: "Loaded 3 historical documents from database sync.", time: "1 min ago" }
+    { text: "Loaded 5 historical documents from database sync.", time: "1 min ago" }
 ];
 
 /* ====================================================
@@ -123,6 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initUploader();
     initArchive();
     initSearch();
+    initPriorityTabs();
     
     // Draw initial dashboard stats and values
     updateTelemetry();
@@ -136,6 +176,15 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             document.getElementById("global-search-input").focus();
         }
+    });
+
+    // Sidebar star Floating Action Button handler
+    document.getElementById("btn-assistant-quick").addEventListener("click", () => {
+        pushToast("🤖 AI assistant loaded! Ask any query about your meeting workspace.", "ai");
+    });
+
+    document.getElementById("btn-upgrade-plan").addEventListener("click", () => {
+        pushToast("🚀 Connecting to payment gateway... Upgrade popup opened.", "info");
     });
 });
 
@@ -171,6 +220,10 @@ function initRouter() {
     });
 
     document.getElementById("btn-goto-archive").addEventListener("click", () => {
+        document.querySelector('[data-target="view-archive"]').click();
+    });
+
+    document.getElementById("btn-goto-actions-tab").addEventListener("click", () => {
         document.querySelector('[data-target="view-archive"]').click();
     });
 
@@ -287,9 +340,11 @@ function initLiveCapture() {
             id: String(meetings.length + 1),
             title: title,
             date: new Date().toISOString().split("T")[0],
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             duration: "0 minutes",
             participants: participants,
             tags: ["engineering"],
+            status: "Analyzed",
             summary: "",
             actionItems: [],
             decisions: [],
@@ -353,7 +408,6 @@ function initLiveCapture() {
         const actionKws = ["will", "must", "should", "need to", "action", "follow-up", "deadline", "task"];
         if (actionKws.some(kw => lower.includes(kw))) {
             let owner = speaker;
-            // Scan if another participant name is in the string
             for (let p of currentLiveMeeting.participants) {
                 if (p.toLowerCase() !== speaker.toLowerCase() && lower.includes(p.toLowerCase())) {
                     owner = p;
@@ -361,7 +415,6 @@ function initLiveCapture() {
                 }
             }
 
-            // Extrapolate deadline if found
             let deadline = "Pending";
             if (lower.includes("tomorrow")) deadline = "Tomorrow";
             else if (lower.includes("friday")) deadline = "Friday";
@@ -371,6 +424,7 @@ function initLiveCapture() {
                 task: content,
                 owner: owner,
                 deadline: deadline,
+                priority: lower.includes("urgent") || lower.includes("immediate") ? "high" : "medium",
                 status: "Pending"
             };
 
@@ -412,11 +466,9 @@ function initLiveCapture() {
         clearInterval(recordingTimer);
         isRecording = false;
 
-        // Auto compile summary
         const mm = Math.ceil(recordingSeconds / 60);
         currentLiveMeeting.duration = `${mm} minutes`;
 
-        // Synthesis summaries
         let summaryText = `## Executive Summary\nLive Capture meeting notes regarding key operations.\n\n`;
         if (currentLiveMeeting.decisions.length > 0) {
             summaryText += `## Key Discussion Points\n`;
@@ -438,7 +490,7 @@ function initLiveCapture() {
         updateTelemetry();
         renderRecentMeetings();
         renderAggregatedChecklist();
-        initArchive(); // Redraw Grid
+        initArchive(); 
 
         pushToast("Meeting Summary Saved to Archive!", "success");
         addNotification(`New live meeting notes compiled: ${currentLiveMeeting.title}`);
@@ -483,13 +535,11 @@ function initUploader() {
         const allowedExtensions = [".docx", ".pdf", ".txt", ".mp3", ".wav"];
         const ext = file.name.substring(file.name.lastIndexOf(".")).toLowerCase();
 
-        // 1. Extension Validation
         if (!allowedExtensions.includes(ext)) {
             pushToast(`❌ Error: Unsupported format '${ext}'`, "error");
             return;
         }
 
-        // 2. Size Validation
         const isAudio = [".mp3", ".wav"].includes(ext);
         const maxLimit = isAudio ? 100 * 1024 * 1024 : 10 * 1024 * 1024;
         if (file.size > maxLimit) {
@@ -497,13 +547,11 @@ function initUploader() {
             return;
         }
 
-        // Trigger loading screen states anim
         logContainer.classList.remove("hidden");
         document.getElementById("uploaded-file-name").textContent = file.name;
         document.getElementById("uploaded-file-size").textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
         document.getElementById("uploaded-file-icon").textContent = isAudio ? "🎵" : "📄";
 
-        // Read or parse contents
         if (ext === ".txt") {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -511,7 +559,6 @@ function initUploader() {
             };
             reader.readAsText(file);
         } else {
-            // For docx/pdf we simulate dynamic extraction values
             runProcessingStagesAnimation(file.name, `
                 Meeting Minutes: Operations Sync
                 Participants: Priya, Amit, Rahul
@@ -532,7 +579,6 @@ function initUploader() {
             { id: "stage-complete", msg: "⏳ Completed." }
         ];
 
-        // Reset indicators
         stages.forEach(s => {
             const el = document.getElementById(s.id);
             el.className = "stage-item pending";
@@ -558,7 +604,6 @@ function initUploader() {
                 currentStage++;
                 setTimeout(runNextStage, 300);
             } else {
-                // Done parsing
                 document.getElementById("upload-status-badge").textContent = "Completed";
                 document.getElementById("upload-status-badge").className = "badge green";
 
@@ -570,23 +615,23 @@ function initUploader() {
     }
 
     function processExtractedDocument(filename, text) {
-        // AI Dynamic processing on extracted text
         const title = `Uploaded - ${filename}`;
         const newMtg = {
             id: String(meetings.length + 1),
             title: title,
             date: new Date().toISOString().split("T")[0],
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             duration: "10 minutes",
             participants: [],
             tags: ["engineering"],
+            status: "Analyzed",
             summary: "",
             actionItems: [],
             decisions: [],
             messages: []
         };
 
-        // 1. Extract participants
-        const participants = ["Priya", "Amit", "Rahul"]; // Defaults
+        const participants = ["Priya", "Amit", "Rahul"]; 
         text.split("\n").forEach(line => {
             if (line.includes(":")) {
                 const spk = line.split(":", 1)[0].trim();
@@ -597,7 +642,6 @@ function initUploader() {
         });
         newMtg.participants = participants;
 
-        // 2. Message timelines
         text.split("\n").forEach(line => {
             const clean = line.trim();
             if (!clean) return;
@@ -609,7 +653,6 @@ function initUploader() {
             }
         });
 
-        // 3. Sentences insights
         const sentences = text.split(/[.!?\n]/).map(s => s.trim()).filter(s => s.length > 5);
         const actionKws = ["will", "must", "should", "need to", "action", "task"];
         sentences.forEach(sent => {
@@ -628,6 +671,7 @@ function initUploader() {
                     task: sent,
                     owner: owner,
                     deadline: deadline || "Pending",
+                    priority: lower.includes("urgent") ? "high" : "medium",
                     status: "Pending"
                 });
             }
@@ -638,14 +682,11 @@ function initUploader() {
             }
         });
 
-        // 4. Summarize Markdown
         const firstSentences = sentences.slice(0, 2).join(" ");
         newMtg.summary = `## Executive Summary\n${firstSentences || "Document text successfully analyzed."}\n\n## Key Outcomes\nDynamic analysis run on uploaded file.`;
 
-        // Save
         meetings.push(newMtg);
 
-        // Reset Uploader View
         setTimeout(() => {
             logContainer.classList.add("hidden");
             updateTelemetry();
@@ -656,14 +697,13 @@ function initUploader() {
             pushToast("Dynamic document analysis complete!", "success");
             addNotification(`Uploaded file processed: ${filename}`);
 
-            // Go to Details
             openMeetingDetails(newMtg.id);
         }, 800);
     }
 }
 
 /* ====================================================
-   6. MEETINGS ARCHIVE GRID & DETAILS TABS
+   6. ARCHIVE & MEETING TABS ACTIONS
    ==================================================== */
 function initArchive() {
     renderMeetingsGrid(meetings);
@@ -703,32 +743,26 @@ function openMeetingDetails(id) {
     const mtg = meetings.find(m => m.id === id);
     if (!mtg) return;
 
-    // View panels swap
     document.getElementById("archive-list-panel").classList.add("hidden");
     const detailsPanel = document.getElementById("archive-details-panel");
     detailsPanel.classList.remove("hidden");
     detailsPanel.setAttribute("data-active-id", id);
 
-    // Sidebar navigation highlight sync
     document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
     document.querySelector('[data-target="view-archive"]').classList.add("active");
     document.querySelectorAll(".view-panel").forEach(p => p.id === "view-archive" ? p.classList.remove("hidden") : p.classList.add("hidden"));
 
-    // Populate metadata labels
     document.getElementById("details-meeting-title").textContent = mtg.title;
-    document.getElementById("details-meeting-date").textContent = `📆 ${mtg.date}`;
+    document.getElementById("details-meeting-date").textContent = `📆 ${mtg.date} • ${mtg.time || '10:00 AM'}`;
     document.getElementById("details-meeting-duration").textContent = `⏱️ ${mtg.duration}`;
     document.getElementById("details-meeting-participants").textContent = `👥 ${mtg.participants.join(", ")}`;
 
-    // 1. Tab Content: Summary
-    // Convert basic double hash headers and lists into HTML tags
     let htmlSummary = mtg.summary
         .replace(/## (.*)/g, '<h3>$1</h3>')
         .replace(/- (.*)/g, '<li>$1</li>')
         .replace(/\n/g, '<br>');
     document.getElementById("details-summary-content").innerHTML = htmlSummary;
 
-    // 2. Tab Content: Action items
     const actionsBox = document.getElementById("details-actions-list");
     if (mtg.actionItems.length === 0) {
         actionsBox.innerHTML = "<p class='empty-feed'>No action items found.</p>";
@@ -738,13 +772,12 @@ function openMeetingDetails(id) {
                 <input type="checkbox" id="action-chk-${idx}" ${a.status === 'Completed' ? 'checked' : ''} onchange="toggleActionStatus('${mtg.id}', ${idx})">
                 <div class="checklist-details">
                     <span class="checklist-title">${a.task}</span>
-                    <span class="checklist-meta">Assigned to: <strong>${a.owner}</strong> | Deadline: ${a.deadline}</span>
+                    <span class="checklist-meta">Assigned to: <strong>${a.owner}</strong> | Deadline: ${a.deadline} | <span class="badge ${a.priority === 'high' ? 'red' : a.priority === 'medium' ? 'amber' : 'green'}">${a.priority}</span></span>
                 </div>
             </div>
         `).join("");
     }
 
-    // 3. Tab Content: Decisions
     const decisionsBox = document.getElementById("details-decisions-list");
     if (mtg.decisions.length === 0) {
         decisionsBox.innerHTML = "<p class='empty-feed'>No decisions logged.</p>";
@@ -754,7 +787,6 @@ function openMeetingDetails(id) {
         `).join("");
     }
 
-    // 4. Tab Content: Transcript Timeline
     const transcriptBox = document.getElementById("details-transcript-list");
     if (mtg.messages.length === 0) {
         transcriptBox.innerHTML = "<p class='empty-feed'>No transcript timeline available.</p>";
@@ -767,7 +799,6 @@ function openMeetingDetails(id) {
         `).join("");
     }
 
-    // Active Tab reset to Summary
     document.querySelectorAll(".tab-btn").forEach(b => {
         b.getAttribute("data-tab") === "tab-summary" ? b.classList.add("active") : b.classList.remove("active");
     });
@@ -811,7 +842,7 @@ function initTabsNavigator() {
 }
 
 /* ====================================================
-   7. TELEMETRY BOARD AND DASHBOARD CARD UPDATER
+   7. TELEMETRY WIDGETS AND FIGMA CARD UPDATER
    ==================================================== */
 function updateTelemetry() {
     const totalMeetings = meetings.length;
@@ -833,8 +864,8 @@ function renderRecentMeetings() {
 
     tbody.innerHTML = list.map(m => `
         <tr onclick="openMeetingDetails('${m.id}')" style="cursor:pointer;">
-            <td><strong>${m.title}</strong></td>
-            <td>${m.date}</td>
+            <td><strong>📁 ${m.title}</strong></td>
+            <td>${m.date} • ${m.time || '10:00 AM'}</td>
             <td>
                 <div class="avatars-group">
                     ${m.participants.slice(0,3).map(p => `
@@ -843,9 +874,25 @@ function renderRecentMeetings() {
                     ${m.participants.length > 3 ? `<div class="avatar-mini">+${m.participants.length - 3}</div>` : ""}
                 </div>
             </td>
-            <td><span class="badge green">Analyzed</span></td>
+            <td><span class="badge ${m.status === 'Processing' ? 'amber' : 'green'}">${m.status || 'Analyzed'}</span></td>
         </tr>
     `).join("");
+}
+
+function initPriorityTabs() {
+    const pTabs = document.querySelectorAll(".p-tab");
+    pTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            pTabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            selectedPriority = tab.getAttribute("data-priority");
+            renderAggregatedChecklist();
+        });
+    });
+
+    document.getElementById("btn-add-action-item-shortcut").addEventListener("click", () => {
+        pushToast("Adding new action item... Feature loading.", "info");
+    });
 }
 
 function renderAggregatedChecklist() {
@@ -855,23 +902,26 @@ function renderAggregatedChecklist() {
     meetings.forEach(m => {
         m.actionItems.forEach((a, idx) => {
             if (a.status === "Pending") {
-                itemsHtml.push(`
-                    <div class="checklist-item">
-                        <input type="checkbox" onchange="toggleActionStatus('${m.id}', ${idx})">
-                        <div class="checklist-details">
-                            <span class="checklist-title">${a.task}</span>
-                            <span class="checklist-meta">Assigned: ${a.owner} | ${m.title}</span>
+                const matchesPriority = (selectedPriority === "all" || a.priority === selectedPriority);
+                if (matchesPriority) {
+                    itemsHtml.push(`
+                        <div class="checklist-item">
+                            <input type="checkbox" onchange="toggleActionStatus('${m.id}', ${idx})">
+                            <div class="checklist-details">
+                                <span class="checklist-title">${a.task}</span>
+                                <span class="checklist-meta">Owner: <strong>${a.owner}</strong> | Due: ${a.deadline} | <span class="badge ${a.priority === 'high' ? 'red' : a.priority === 'medium' ? 'amber' : 'green'}">${a.priority}</span></span>
+                            </div>
                         </div>
-                    </div>
-                `);
+                    `);
+                }
             }
         });
     });
 
     if (itemsHtml.length === 0) {
-        box.innerHTML = `<p class="empty-feed">All action items completed! 🎉</p>`;
+        box.innerHTML = `<p class="empty-feed">No pending action items for this filter.</p>`;
     } else {
-        box.innerHTML = itemsHtml.slice(0, 5).join("");
+        box.innerHTML = itemsHtml.slice(0, 6).join("");
     }
 }
 
@@ -912,7 +962,7 @@ function initSearch() {
 }
 
 /* ====================================================
-   9. LOCAL MARKDOWN FILE EXPORTER DOWNLOADER
+   9. MARKDOWN EXPORTER
    ==================================================== */
 function exportMeetingToMarkdownFile(meeting) {
     let md = `# ${meeting.title}\n\n`;
@@ -926,7 +976,7 @@ function exportMeetingToMarkdownFile(meeting) {
         md += `No action items identified.\n`;
     } else {
         meeting.actionItems.forEach(a => {
-            md += `- [${a.status === 'Completed' ? 'x' : ' '}] ${a.task} (Owner: ${a.owner} | Due: ${a.deadline})\n`;
+            md += `- [${a.status === 'Completed' ? 'x' : ' '}] ${a.task} (Owner: ${a.owner} | Due: ${a.deadline} | Priority: ${a.priority})\n`;
         });
     }
     md += `\n`;
@@ -946,7 +996,6 @@ function exportMeetingToMarkdownFile(meeting) {
         md += `**${m.speaker}**: ${m.content}\n\n`;
     });
 
-    // File download trigger
     const blob = new Blob([md], { type: "text/markdown;charset=utf-8;" });
     const link = document.createElement("a");
     const filename = `${meeting.title.replace(/\s+/g, "_")}_Notes.md`;
@@ -965,14 +1014,13 @@ function exportMeetingToMarkdownFile(meeting) {
 }
 
 /* ====================================================
-   10. FLOATING TOAST NOTIFICATION POPUPS
+   10. FLOATING TOAST POPUPS
    ==================================================== */
 function pushToast(message, type = "info") {
     const container = document.getElementById("toast-container");
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
     
-    // Choose icon
     let icon = "ℹ️";
     if (type === "success") icon = "✅";
     else if (type === "warning") icon = "⚠️";
@@ -987,7 +1035,6 @@ function pushToast(message, type = "info") {
 
     container.appendChild(toast);
 
-    // Auto remove after 5 seconds
     const timeout = setTimeout(() => {
         toast.remove();
     }, 5000);

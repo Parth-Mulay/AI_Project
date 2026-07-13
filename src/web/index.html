@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Meeting Notes Manager - SaaS Dashboard</title>
+    <title>AI Meeting Notes Manager - SaaS UI Workspace</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
     <!-- Style Sheet -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -19,47 +19,80 @@
     <!-- Main Layout Grid -->
     <div class="app-container">
 
-        <!-- Left Sidebar Navigation -->
+        <!-- Left Sidebar Navigation (Matte Glass) -->
         <aside class="sidebar">
-            <div class="sidebar-brand">
-                <span class="ai-sparkle">🤖</span>
-                <h1>AI NOTES</h1>
+            <div class="sidebar-top-group">
+                <div class="sidebar-brand">
+                    <span class="ai-sparkle">🤖</span>
+                    <h1>AI NOTES</h1>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="nav-item active" data-target="view-dashboard">
+                            <span class="nav-icon">📊</span> Dashboard
+                        </li>
+                        <li class="nav-item" data-target="view-live">
+                            <span class="nav-icon">🎙️</span> Live Capture
+                        </li>
+                        <li class="nav-item" data-target="view-upload">
+                            <span class="nav-icon">📤</span> Upload File
+                        </li>
+                        <li class="nav-item" data-target="view-archive">
+                            <span class="nav-icon">📂</span> Meetings Archive
+                        </li>
+                        <li class="nav-item" data-target="view-workspace">
+                            <span class="nav-icon">👥</span> Workspace Directory
+                        </li>
+                        <!-- New Figma Sidebar Items -->
+                        <li class="nav-item" data-target="view-assistant">
+                            <span class="nav-icon">✨</span> AI Assistant <span class="nav-new-chip">New</span>
+                        </li>
+                        <li class="nav-item" data-target="view-analytics">
+                            <span class="nav-icon">📈</span> Analytics
+                        </li>
+                        <li class="nav-item" data-target="view-integrations">
+                            <span class="nav-icon">🔌</span> Integrations
+                        </li>
+                        <li class="nav-item" data-target="view-settings">
+                            <span class="nav-icon">⚙️</span> System Settings
+                        </li>
+                        <li class="nav-item" data-target="view-onboarding">
+                            <span class="nav-icon">📖</span> Onboarding Tour
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            
-            <nav class="sidebar-nav">
-                <ul>
-                    <li class="nav-item active" data-target="view-dashboard">
-                        <span class="nav-icon">📊</span> Dashboard
-                    </li>
-                    <li class="nav-item" data-target="view-live">
-                        <span class="nav-icon">🎙️</span> Live Capture
-                    </li>
-                    <li class="nav-item" data-target="view-upload">
-                        <span class="nav-icon">📤</span> Upload File
-                    </li>
-                    <li class="nav-item" data-target="view-archive">
-                        <span class="nav-icon">📂</span> Meetings Archive
-                    </li>
-                    <li class="nav-item" data-target="view-workspace">
-                        <span class="nav-icon">👥</span> Workspace Directory
-                    </li>
-                    <li class="nav-item" data-target="view-settings">
-                        <span class="nav-icon">⚙️</span> System Settings
-                    </li>
-                    <li class="nav-item" data-target="view-onboarding">
-                        <span class="nav-icon">📖</span> Onboarding Tour
-                    </li>
-                </ul>
-            </nav>
 
-            <!-- User Tag Profile Section -->
-            <div class="sidebar-user" id="sidebar-user-toggle">
-                <div class="user-avatar">P</div>
-                <div class="user-details">
-                    <span class="user-name">Priya</span>
-                    <span class="user-role-badge">Member</span>
+            <div class="sidebar-bottom-group">
+                <!-- Figma Storage Used Card -->
+                <div class="sidebar-storage-card">
+                    <div class="storage-meta">
+                        <span class="storage-title">Storage Used</span>
+                        <span class="storage-percent">24%</span>
+                    </div>
+                    <div class="storage-numbers">24.5 GB / 100 GB</div>
+                    <div class="storage-bar">
+                        <div class="storage-progress" style="width: 24.5%;"></div>
+                    </div>
+                    <button class="btn btn-secondary btn-full btn-small" id="btn-upgrade-plan">Upgrade Plan</button>
+                </div>
+
+                <!-- User Tag Profile Section -->
+                <div class="sidebar-user" id="sidebar-user-toggle">
+                    <div class="user-avatar">P</div>
+                    <div class="user-details">
+                        <span class="user-name">Priya</span>
+                        <span class="user-role-badge">Member</span>
+                    </div>
+                    <span class="user-dropdown-arrow">▼</span>
                 </div>
             </div>
+
+            <!-- Pulsing AI Magic Assistant Sparkle Star Button -->
+            <button class="floating-ai-sparkle-btn" id="btn-assistant-quick" aria-label="Quick AI Assistant">
+                ✦
+            </button>
         </aside>
 
         <!-- Main Content Area -->
@@ -69,8 +102,8 @@
             <header class="top-bar">
                 <div class="search-container">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="global-search-input" placeholder="Search meetings or keywords (Ctrl+K)...">
-                    <span class="search-hint">Ctrl+K</span>
+                    <input type="text" id="global-search-input" placeholder="Search meetings, keywords, participants... (Ctrl+K)...">
+                    <span class="search-hint">⌘ K</span>
                 </div>
 
                 <div class="top-bar-actions">
@@ -88,7 +121,7 @@
             <!-- Notification Drawer (Slide-in) -->
             <div id="notification-drawer" class="notification-drawer hidden">
                 <div class="drawer-header">
-                    <h3>Notifications Drawer</h3>
+                    <h3>Notifications</h3>
                     <button id="close-drawer-btn" class="close-btn">&times;</button>
                 </div>
                 <div class="drawer-content" id="notification-list">
@@ -101,40 +134,183 @@
 
                 <!-- VIEW 1: DASHBOARD HOME -->
                 <section id="view-dashboard" class="view-panel">
-                    <div class="view-header">
-                        <h2>Workspace Telemetry Dashboard</h2>
-                        <p class="subtitle">Real-time statistics and summary tracking across your organization</p>
+                    <div class="dashboard-greeting-row">
+                        <div class="view-header">
+                            <h2>Welcome back, Priya! 👋</h2>
+                            <p class="subtitle">Here's what's happening with your meetings today.</p>
+                        </div>
+                        <div class="date-picker-widget">
+                            <span>📅 July 13 - July 19, 2026</span>
+                        </div>
                     </div>
 
-                    <!-- Statistics Grid Card Telemetry -->
+                    <!-- Statistics Grid Card Telemetry (4 columns, with custom wave curves) -->
                     <div class="stats-grid">
-                        <div class="stat-card">
-                            <span class="stat-icon">⏱️</span>
-                            <div class="stat-data">
-                                <span class="stat-num" id="stat-time-saved">5.0 hrs</span>
-                                <span class="stat-lbl">Time Saved This Week</span>
+                        <div class="stat-card purple-theme">
+                            <div class="stat-card-top">
+                                <span class="stat-lbl">Time Saved</span>
+                                <span class="stat-btn-add">+</span>
                             </div>
-                            <span class="stat-change success">+15% vs last week</span>
+                            <div class="stat-num" id="stat-time-saved">7.5 hrs</div>
+                            <div class="stat-card-bottom">
+                                <span class="stat-change success">↑ 15% vs last week</span>
+                                <!-- Small inline SVG sparkline wave -->
+                                <svg class="sparkline-wave" viewBox="0 0 100 20">
+                                    <path d="M0 15 Q25 5 50 12 T100 2" fill="none" stroke="#8B5CF6" stroke-width="1.5" />
+                                </svg>
+                            </div>
                         </div>
-                        <div class="stat-card">
-                            <span class="stat-icon">📝</span>
-                            <div class="stat-data">
-                                <span class="stat-num" id="stat-meetings-count">2</span>
+                        <div class="stat-card blue-theme">
+                            <div class="stat-card-top">
                                 <span class="stat-lbl">Meetings Analyzed</span>
+                                <span class="stat-btn-add">+</span>
                             </div>
-                            <span class="stat-change info">99.9% AI accuracy</span>
+                            <div class="stat-num" id="stat-meetings-count">3</div>
+                            <div class="stat-card-bottom">
+                                <span class="stat-change success">↑ 20% vs last week</span>
+                                <svg class="sparkline-wave" viewBox="0 0 100 20">
+                                    <path d="M0 18 Q25 12 50 8 T100 3" fill="none" stroke="#3F83F8" stroke-width="1.5" />
+                                </svg>
+                            </div>
                         </div>
-                        <div class="stat-card">
-                            <span class="stat-icon">🎯</span>
-                            <div class="stat-data">
-                                <span class="stat-num" id="stat-actions-pending">3</span>
-                                <span class="stat-lbl">Pending Actions Checklist</span>
+                        <div class="stat-card pink-theme">
+                            <div class="stat-card-top">
+                                <span class="stat-lbl">Actions Pending</span>
+                                <span class="stat-btn-add">+</span>
                             </div>
-                            <span class="stat-change warning">88% completion</span>
+                            <div class="stat-num" id="stat-actions-pending">6</div>
+                            <div class="stat-card-bottom">
+                                <span class="stat-change warning">↓ 5% vs last week</span>
+                                <svg class="sparkline-wave" viewBox="0 0 100 20">
+                                    <path d="M0 5 Q25 15 50 8 T100 14" fill="none" stroke="#E52E71" stroke-width="1.5" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-card green-theme">
+                            <div class="stat-card-top">
+                                <span class="stat-lbl">AI Accuracy</span>
+                                <span class="stat-btn-add">+</span>
+                            </div>
+                            <div class="stat-num" id="stat-ai-accuracy">99.9%</div>
+                            <div class="stat-card-bottom">
+                                <span class="stat-change success">↑ 2% vs last week</span>
+                                <svg class="sparkline-wave" viewBox="0 0 100 20">
+                                    <path d="M0 10 Q25 5 50 6 T100 2" fill="none" stroke="#10B981" stroke-width="1.5" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Dashboard Workspace Split Panels -->
+                    <!-- Middle Analytics Row (Curved Line, Donut Category, Progress Ring) -->
+                    <div class="analytics-charts-row">
+                        <!-- Chart 1: Time Saved Trend -->
+                        <div class="analytics-card trend-card">
+                            <div class="chart-header">
+                                <h3>Time Saved Trend</h3>
+                                <span class="chart-meta-dropdown">This Week</span>
+                            </div>
+                            <div class="chart-content relative-chart">
+                                <!-- SVG Line Chart -->
+                                <svg viewBox="0 0 400 150" class="trend-svg">
+                                    <defs>
+                                        <linearGradient id="trend-area-grad" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.3"/>
+                                            <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Horizontal Grid lines -->
+                                    <line x1="40" y1="20" x2="380" y2="20" stroke="#243249" stroke-dasharray="4 4" />
+                                    <line x1="50" y1="50" x2="380" y2="50" stroke="#243249" stroke-dasharray="4 4" />
+                                    <line x1="50" y1="80" x2="380" y2="80" stroke="#243249" stroke-dasharray="4 4" />
+                                    <line x1="50" y1="110" x2="380" y2="110" stroke="#243249" stroke-dasharray="4 4" />
+                                    
+                                    <!-- Area Fill -->
+                                    <path d="M 50 120 L 50 100 Q 100 95 150 115 T 250 50 T 350 40 L 380 40 L 380 120 Z" fill="url(#trend-area-grad)" />
+                                    <!-- Curved Line path -->
+                                    <path d="M 50 100 Q 100 95 150 115 T 250 50 T 350 40 L 380 40" fill="none" stroke="#8B5CF6" stroke-width="3" />
+                                    
+                                    <!-- Peak Node indicators -->
+                                    <circle cx="250" cy="50" r="5" fill="#8B5CF6" />
+                                    <circle cx="250" cy="50" r="10" fill="none" stroke="#8B5CF6" stroke-width="1.5" opacity="0.5" />
+                                </svg>
+                                <!-- Interactive Tooltip Box -->
+                                <div class="chart-tooltip" style="top: 15px; left: 200px;">
+                                    <span class="tooltip-title">Thu, July 16</span>
+                                    <span class="tooltip-val">7.5 hrs</span>
+                                </div>
+                                <div class="chart-axes">
+                                    <span>Mon</span>
+                                    <span>Tue</span>
+                                    <span>Wed</span>
+                                    <span>Thu</span>
+                                    <span>Fri</span>
+                                    <span>Sat</span>
+                                    <span>Sun</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chart 2: Meetings by Category -->
+                        <div class="analytics-card category-card">
+                            <div class="chart-header">
+                                <h3>Meetings by Category</h3>
+                            </div>
+                            <div class="chart-donut-container">
+                                <!-- SVG Donut segment circle -->
+                                <svg viewBox="0 0 120 120" class="donut-svg">
+                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#243249" stroke-width="10" />
+                                    <!-- Planning segment (40%) -->
+                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#3F83F8" stroke-width="10" 
+                                            stroke-dasharray="282.7" stroke-dashoffset="113" transform="rotate(-90 60 60)" />
+                                    <!-- Marketing segment (25%) -->
+                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#8B5CF6" stroke-width="10" 
+                                            stroke-dasharray="282.7" stroke-dashoffset="183.7" transform="rotate(54 60 60)" />
+                                    <!-- Operations segment (20%) -->
+                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#E52E71" stroke-width="10" 
+                                            stroke-dasharray="282.7" stroke-dashoffset="226.1" transform="rotate(144 60 60)" />
+                                    <!-- HR segment (10%) -->
+                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#F59E0B" stroke-width="10" 
+                                            stroke-dasharray="282.7" stroke-dashoffset="254.4" transform="rotate(216 60 60)" />
+                                    <!-- Others segment (5%) -->
+                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#10B981" stroke-width="10" 
+                                            stroke-dasharray="282.7" stroke-dashoffset="268.5" transform="rotate(252 60 60)" />
+                                    <!-- Inner label text -->
+                                    <text x="60" y="58" text-anchor="middle" font-family="Outfit" font-weight="bold" font-size="16" fill="#F3F4F6">12</text>
+                                    <text x="60" y="74" text-anchor="middle" font-family="Inter" font-size="9" fill="#9CA3AF">Total</text>
+                                </svg>
+                                <div class="donut-legend">
+                                    <div class="legend-item"><span class="color-dot blue"></span> Planning (40%)</div>
+                                    <div class="legend-item"><span class="color-dot purple"></span> Marketing (25%)</div>
+                                    <div class="legend-item"><span class="color-dot pink"></span> Operations (20%)</div>
+                                    <div class="legend-item"><span class="color-dot yellow"></span> HR (10%)</div>
+                                    <div class="legend-item"><span class="color-dot green"></span> Others (5%)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chart 3: Actions Overview progress ring -->
+                        <div class="analytics-card progress-card">
+                            <div class="chart-header">
+                                <h3>Actions Overview</h3>
+                            </div>
+                            <div class="chart-donut-container justify-center">
+                                <svg viewBox="0 0 120 120" class="progress-ring-svg">
+                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#243249" stroke-width="10" />
+                                    <!-- 88% completed ring segment -->
+                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#10B981" stroke-width="10" 
+                                            stroke-dasharray="282.7" stroke-dashoffset="33.9" transform="rotate(-90 60 60)" />
+                                    <text x="60" y="58" text-anchor="middle" font-family="Outfit" font-weight="bold" font-size="16" fill="#F3F4F6">88%</text>
+                                    <text x="60" y="74" text-anchor="middle" font-family="Inter" font-size="9" fill="#9CA3AF">Completed</text>
+                                </svg>
+                                <div class="donut-legend inline-legend">
+                                    <div class="legend-item"><span class="color-dot green"></span> Completed (88%)</div>
+                                    <div class="legend-item"><span class="color-dot border-gray"></span> Pending (12%)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lower Split Grid Layout -->
                     <div class="dashboard-split">
                         
                         <!-- Left Panel: Recent Meetings -->
@@ -148,7 +324,7 @@
                                     <thead>
                                         <tr>
                                             <th>Meeting Title</th>
-                                            <th>Date</th>
+                                            <th>Date & Time</th>
                                             <th>Participants</th>
                                             <th>Status</th>
                                         </tr>
@@ -164,10 +340,19 @@
                         <div class="split-card action-checklist-card">
                             <div class="card-header">
                                 <h3>Aggregated Action Items</h3>
+                                <button class="card-action-btn" id="btn-goto-actions-tab">View All</button>
+                            </div>
+                            <!-- Priority category filters tab bar -->
+                            <div class="priority-tabs-bar">
+                                <button class="p-tab active" data-priority="all">All (6)</button>
+                                <button class="p-tab" data-priority="high">High (2)</button>
+                                <button class="p-tab" data-priority="medium">Medium (2)</button>
+                                <button class="p-tab" data-priority="low">Low (2)</button>
                             </div>
                             <div class="checklist-container" id="aggregated-checklist">
                                 <!-- Populated dynamically via JS -->
                             </div>
+                            <button class="add-action-item-btn" id="btn-add-action-item-shortcut">+ Add New Action Item</button>
                         </div>
 
                     </div>
@@ -327,7 +512,7 @@
                     <!-- MEETING DETAILS PANEL (TABS) -->
                     <div id="archive-details-panel" class="hidden">
                         <div class="details-header">
-                            <button class="btn btn-secondary btn-small" id="btn-back-to-archive">🔙 Back to Archive</button>
+                            <button class="btn btn-secondary btn-small" id="btn-back-to-archive">Back to Archive</button>
                             <div class="title-row">
                                 <h3 id="details-meeting-title">Sprint Planning - Week 15</h3>
                                 <div class="action-buttons">
