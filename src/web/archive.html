@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Meeting Notes Manager - Meetings Archive</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Notification Toasts Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Main Layout Grid -->
+    <div class="app-container">
+
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-top-group">
+                <div class="sidebar-brand">
+                    <span class="ai-sparkle">🤖</span>
+                    <h1>AI NOTES</h1>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="nav-item">
+                            <a href="dashboard.html" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="live.html" class="nav-link"><span class="nav-icon">🎙️</span> Live Capture</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="upload.html" class="nav-link"><span class="nav-icon">📤</span> Upload File</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="archive.html" class="nav-link"><span class="nav-icon">📂</span> Meetings Archive</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="directory.html" class="nav-link"><span class="nav-icon">👥</span> Workspace Directory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="btn-sidebar-assistant"><span class="nav-icon">✨</span> AI Assistant <span class="nav-new-chip">New</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="dashboard.html" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="settings.html" class="nav-link"><span class="nav-icon">🔌</span> Integrations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="settings.html" class="nav-link"><span class="nav-icon">⚙️</span> System Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="onboarding.html" class="nav-link"><span class="nav-icon">📖</span> Onboarding Tour</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom-group">
+                <!-- Storage Card -->
+                <div class="sidebar-storage-card">
+                    <div class="storage-meta">
+                        <span class="storage-title">Storage Used</span>
+                        <span class="storage-percent">24%</span>
+                    </div>
+                    <div class="storage-numbers">24.5 GB / 100 GB</div>
+                    <div class="storage-bar">
+                        <div class="storage-progress" style="width: 24.5%;"></div>
+                    </div>
+                    <button class="btn btn-secondary btn-full btn-small" id="btn-upgrade-plan">Upgrade Plan</button>
+                </div>
+
+                <!-- User Profile -->
+                <div class="sidebar-user">
+                    <div class="user-avatar">P</div>
+                    <div class="user-details">
+                        <span class="user-name">Priya</span>
+                        <span class="user-role-badge">Member</span>
+                    </div>
+                    <span class="user-dropdown-arrow">▼</span>
+                </div>
+            </div>
+
+            <!-- AI Star FAB -->
+            <button class="floating-ai-sparkle-btn" id="btn-assistant-quick" aria-label="Quick AI Assistant">
+                ✦
+            </button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-canvas">
+
+            <!-- Top Header Bar -->
+            <header class="top-bar">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="global-search-input" placeholder="Search meetings, keywords, participants... (Ctrl+K)...">
+                    <span class="search-hint">⌘ K</span>
+                </div>
+
+                <div class="top-bar-actions">
+                    <button class="top-btn" id="btn-notifications" aria-label="Notifications Drawer">
+                        🔔 <span class="notification-dot" id="noti-dot"></span>
+                    </button>
+                    <button class="top-btn role-toggle-btn" id="btn-role-toggle">
+                        Active Role: <strong id="current-role-txt">MEMBER</strong>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Notification Drawer (Slide-in) -->
+            <div id="notification-drawer" class="notification-drawer hidden">
+                <div class="drawer-header">
+                    <h3>Notifications</h3>
+                    <button id="close-drawer-btn" class="close-btn">&times;</button>
+                </div>
+                <div class="drawer-content" id="notification-list">
+                    <p class="empty-noti">No new notifications.</p>
+                </div>
+            </div>
+
+            <!-- Page Views Content Canvas -->
+            <div class="canvas-content">
+                <section id="view-archive" class="view-panel">
+                    <div class="view-header">
+                        <h2>Meetings Archive & Analytics</h2>
+                        <p class="subtitle">Search, filter, and inspect summary outcomes of previous meetings</p>
+                    </div>
+
+                    <!-- ARCHIVE GRID PANEL (LIST) -->
+                    <div id="archive-list-panel">
+                        <div class="archive-filters">
+                            <div class="filter-search">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="archive-search-input" placeholder="Search title or transcripts...">
+                            </div>
+                            <div class="filter-category">
+                                <label for="archive-tag-filter">Filter Tag</label>
+                                <select id="archive-tag-filter">
+                                    <option value="all">All Meetings</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="government">Government</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="meetings-grid" id="meetings-grid-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- MEETING DETAILS PANEL (TABS) -->
+                    <div id="archive-details-panel" class="hidden">
+                        <div class="details-header">
+                            <button class="btn btn-secondary btn-small" id="btn-back-to-archive">Back to Archive</button>
+                            <div class="title-row">
+                                <h3 id="details-meeting-title">Sprint Planning - Week 15</h3>
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary btn-small" id="btn-export-markdown">📥 Export Markdown</button>
+                                </div>
+                            </div>
+                            <div class="details-meta-row">
+                                <span id="details-meeting-date">📆 2026-07-13</span>
+                                <span id="details-meeting-duration">⏱️ 0 mins</span>
+                                <span id="details-meeting-participants">👥 Priya, Rahul, Amit</span>
+                            </div>
+                        </div>
+
+                        <!-- Interactive TAB switches -->
+                        <div class="tabs-navigator">
+                            <button class="tab-btn active" data-tab="tab-summary">📄 Summary</button>
+                            <button class="tab-btn" data-tab="tab-actions">🎯 Action Items</button>
+                            <button class="tab-btn" data-tab="tab-decisions">🏁 Decisions Log</button>
+                            <button class="tab-btn" data-tab="tab-timeline">📝 Timeline Transcript</button>
+                        </div>
+
+                        <div class="tabs-container">
+                            <!-- Summary Tab -->
+                            <div class="tab-pane active" id="tab-summary">
+                                <div class="markdown-preview" id="details-summary-content">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Action Items Tab -->
+                            <div class="tab-pane" id="tab-actions">
+                                <div class="checklist-container" id="details-actions-list">
+                                    <!-- Dynamic Checklist -->
+                                </div>
+                            </div>
+
+                            <!-- Decisions Tab -->
+                            <div class="tab-pane" id="tab-decisions">
+                                <ul class="decisions-bullet-list" id="details-decisions-list">
+                                    <!-- Dynamic Bullet List -->
+                                </ul>
+                            </div>
+
+                            <!-- Transcript Timeline Tab -->
+                            <div class="tab-pane" id="tab-timeline">
+                                <div class="transcript-timeline-container" id="details-transcript-list">
+                                    <!-- Dynamic Messages -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

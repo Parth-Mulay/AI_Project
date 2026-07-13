@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Meeting Notes Manager - Workspace Directory</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Notification Toasts Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Main Layout Grid -->
+    <div class="app-container">
+
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-top-group">
+                <div class="sidebar-brand">
+                    <span class="ai-sparkle">🤖</span>
+                    <h1>AI NOTES</h1>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="nav-item">
+                            <a href="dashboard.html" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="live.html" class="nav-link"><span class="nav-icon">🎙️</span> Live Capture</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="upload.html" class="nav-link"><span class="nav-icon">📤</span> Upload File</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="archive.html" class="nav-link"><span class="nav-icon">📂</span> Meetings Archive</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="directory.html" class="nav-link"><span class="nav-icon">👥</span> Workspace Directory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="btn-sidebar-assistant"><span class="nav-icon">✨</span> AI Assistant <span class="nav-new-chip">New</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="dashboard.html" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="settings.html" class="nav-link"><span class="nav-icon">🔌</span> Integrations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="settings.html" class="nav-link"><span class="nav-icon">⚙️</span> System Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="onboarding.html" class="nav-link"><span class="nav-icon">📖</span> Onboarding Tour</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom-group">
+                <!-- Storage Card -->
+                <div class="sidebar-storage-card">
+                    <div class="storage-meta">
+                        <span class="storage-title">Storage Used</span>
+                        <span class="storage-percent">24%</span>
+                    </div>
+                    <div class="storage-numbers">24.5 GB / 100 GB</div>
+                    <div class="storage-bar">
+                        <div class="storage-progress" style="width: 24.5%;"></div>
+                    </div>
+                    <button class="btn btn-secondary btn-full btn-small" id="btn-upgrade-plan">Upgrade Plan</button>
+                </div>
+
+                <!-- User Profile -->
+                <div class="sidebar-user">
+                    <div class="user-avatar">P</div>
+                    <div class="user-details">
+                        <span class="user-name">Priya</span>
+                        <span class="user-role-badge">Member</span>
+                    </div>
+                    <span class="user-dropdown-arrow">▼</span>
+                </div>
+            </div>
+
+            <!-- AI Star FAB -->
+            <button class="floating-ai-sparkle-btn" id="btn-assistant-quick" aria-label="Quick AI Assistant">
+                ✦
+            </button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-canvas">
+
+            <!-- Top Header Bar -->
+            <header class="top-bar">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="global-search-input" placeholder="Search meetings, keywords, participants... (Ctrl+K)...">
+                    <span class="search-hint">⌘ K</span>
+                </div>
+
+                <div class="top-bar-actions">
+                    <button class="top-btn" id="btn-notifications" aria-label="Notifications Drawer">
+                        🔔 <span class="notification-dot" id="noti-dot"></span>
+                    </button>
+                    <button class="top-btn role-toggle-btn" id="btn-role-toggle">
+                        Active Role: <strong id="current-role-txt">MEMBER</strong>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Notification Drawer (Slide-in) -->
+            <div id="notification-drawer" class="notification-drawer hidden">
+                <div class="drawer-header">
+                    <h3>Notifications</h3>
+                    <button id="close-drawer-btn" class="close-btn">&times;</button>
+                </div>
+                <div class="drawer-content" id="notification-list">
+                    <p class="empty-noti">No new notifications.</p>
+                </div>
+            </div>
+
+            <!-- Page Views Content Canvas -->
+            <div class="canvas-content">
+                <section id="view-workspace" class="view-panel">
+                    <div class="view-header">
+                        <h2>Workspace Directory & Permissions</h2>
+                        <p class="subtitle">View team members and audit security logs</p>
+                    </div>
+
+                    <div class="workspace-grid">
+                        
+                        <!-- Member List Card -->
+                        <div class="workspace-card">
+                            <div class="card-header">
+                                <h3>Team Directory</h3>
+                            </div>
+                            <div class="directory-container">
+                                <ul class="directory-list">
+                                    <li class="directory-item">
+                                        <div class="member-avatar">P</div>
+                                        <div class="member-info">
+                                            <h4>Priya (You)</h4>
+                                            <p>priya@company.com</p>
+                                        </div>
+                                        <span class="user-role-badge" id="directory-user-role">Member</span>
+                                    </li>
+                                    <li class="directory-item">
+                                        <div class="member-avatar">R</div>
+                                        <div class="member-info">
+                                            <h4>Rahul</h4>
+                                            <p>rahul@company.com</p>
+                                        </div>
+                                        <span class="user-role-badge">Member</span>
+                                    </li>
+                                    <li class="directory-item">
+                                        <div class="member-avatar">A</div>
+                                        <div class="member-info">
+                                            <h4>Amit</h4>
+                                            <p>amit@company.com</p>
+                                        </div>
+                                        <span class="user-role-badge">Admin</span>
+                                    </li>
+                                    <li class="directory-item">
+                                        <div class="member-avatar">B</div>
+                                        <div class="member-info">
+                                            <h4>Brian</h4>
+                                            <p>brian@company.com</p>
+                                        </div>
+                                        <span class="user-role-badge">Admin</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Security Audit Logs (Role Gated) -->
+                        <div class="workspace-card audit-logs-card relative-gated">
+                            <div class="card-header">
+                                <h3>Security Audit Logs</h3>
+                            </div>
+                            
+                            <!-- Locked Overlay dialog -->
+                            <div class="locked-overlay" id="audit-locked-overlay">
+                                <span class="lock-icon">🔒</span>
+                                <h4>Access Restricted to Administrator Role</h4>
+                                <p>Toggle active role to Admin in the top-right header to view compliance logs.</p>
+                            </div>
+
+                            <div class="audit-logs-container" id="audit-logs-container">
+                                <ul class="audit-list">
+                                    <li class="audit-item">
+                                        <span class="audit-timestamp">[2026-07-13 09:42:01]</span>
+                                        <span class="audit-event">SEC-AUDIT: User login verified via Google Workspace SSO.</span>
+                                    </li>
+                                    <li class="audit-item">
+                                        <span class="audit-timestamp">[2026-07-13 09:46:12]</span>
+                                        <span class="audit-event">SEC-AUDIT: Default workspace retention sweep executed (90 days).</span>
+                                    </li>
+                                    <li class="audit-item">
+                                        <span class="audit-timestamp">[2026-07-13 10:15:30]</span>
+                                        <span class="audit-event">SEC-AUDIT: Active webhook settings modified by Amit.</span>
+                                    </li>
+                                    <li class="audit-item">
+                                        <span class="audit-timestamp">[2026-07-13 11:10:45]</span>
+                                        <span class="audit-event">SEC-AUDIT: Export token requested for Sprint Planning summary.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

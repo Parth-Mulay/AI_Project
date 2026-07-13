@@ -2,8 +2,8 @@
    AI MEETING NOTES MANAGER - WEB FRONTEND CONTROLLER
    ==================================================== */
 
-// Initial Seed Data matching the Figma Mockup
-let meetings = [
+// Default Seed Data matching the Figma Mockup
+const defaultMeetings = [
     {
         id: "1",
         title: "Government Planning Sync - 2027 Agenda",
@@ -139,49 +139,73 @@ Rahul confirmed that the core authentication module is fully completed. The team
     }
 ];
 
-// App Global State
-let currentUserRole = "Member"; 
+// Load State from LocalStorage or seed defaults
+let meetings = JSON.parse(localStorage.getItem("meetings")) || defaultMeetings;
+let currentUserRole = localStorage.getItem("currentUserRole") || "Member";
+let notifications = JSON.parse(localStorage.getItem("notifications")) || [
+    { text: "Welcome to AI Meeting Notes Manager Dashboard!", time: "Just now" },
+    { text: "Loaded 5 historical documents from database sync.", time: "1 min ago" }
+];
+
 let isRecording = false;
 let recordingTimer = null;
 let recordingSeconds = 0;
 let currentLiveMeeting = null;
 let selectedPriority = "all";
-let notifications = [
-    { text: "Welcome to AI Meeting Notes Manager Dashboard!", time: "Just now" },
-    { text: "Loaded 5 historical documents from database sync.", time: "1 min ago" }
-];
+
+// Save variables helper
+function saveStateToLocalStorage() {
+    localStorage.setItem("meetings", JSON.stringify(meetings));
+    localStorage.setItem("currentUserRole", currentUserRole);
+    localStorage.setItem("notifications", JSON.stringify(notifications));
+}
 
 /* ====================================================
    DOM CONTENT LOADED INITIALIZER
    ==================================================== */
 document.addEventListener("DOMContentLoaded", () => {
-    initRouter();
+    // Save defaults back to storage if empty
+    if (!localStorage.getItem("meetings")) {
+        saveStateToLocalStorage();
+    }
+
+    initGlobalHeader();
     initRoleController();
     initNotificationDrawer();
-    initLiveCapture();
-    initUploader();
-    initArchive();
-    initSearch();
-    initPriorityTabs();
     
-    // Draw initial dashboard stats and values
-    updateTelemetry();
-    renderRecentMeetings();
-    renderAggregatedChecklist();
-    renderNotificationList();
+    // Page-specific initializers based on present DOM elements
+    if (document.getElementById("view-dashboard")) {
+        initDashboardView();
+    }
+    if (document.getElementById("btn-start-live")) {
+        initLiveCapture();
+    }
+    if (document.getElementById("drop-zone")) {
+        initUploader();
+    }
+    if (document.getElementById("meetings-grid-container")) {
+        initArchiveView();
+    }
+    if (document.getElementById("directory-user-role")) {
+        // Workspace directory page
+        syncRoleUI();
+    }
+    if (document.getElementById("settings-retention")) {
+        initSettingsView();
+    }
 
-    // Setup global Ctrl+K key listener for search
-    window.addEventListener("keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-            e.preventDefault();
-            document.getElementById("global-search-input").focus();
-        }
-    });
-
-    // Sidebar star Floating Action Button handler
+    // Global elements event binding
     document.getElementById("btn-assistant-quick").addEventListener("click", () => {
         pushToast("🤖 AI assistant loaded! Ask any query about your meeting workspace.", "ai");
     });
+
+    const assistantSidebar = document.getElementById("btn-sidebar-assistant");
+    if (assistantSidebar) {
+        assistantSidebar.addEventListener("click", (e) => {
+            e.preventDefault();
+            pushToast("🤖 Interactive AI Assistant Drawer opening.", "ai");
+        });
+    }
 
     document.getElementById("btn-upgrade-plan").addEventListener("click", () => {
         pushToast("🚀 Connecting to payment gateway... Upgrade popup opened.", "info");
@@ -189,98 +213,80 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ====================================================
-   1. ROUTER VIEW SWAP CONTROLLER
+   GLOBAL HEADER BAR & ROUTING
    ==================================================== */
-function initRouter() {
-    const navItems = document.querySelectorAll(".nav-item");
-    const panels = document.querySelectorAll(".view-panel");
-
-    navItems.forEach(item => {
-        item.addEventListener("click", () => {
-            const targetId = item.getAttribute("data-target");
-            
-            // Swap active classes in navigation sidebar
-            navItems.forEach(i => i.classList.remove("active"));
-            item.classList.add("active");
-
-            // Swap panel visibility
-            panels.forEach(p => {
-                if (p.id === targetId) {
-                    p.classList.remove("hidden");
-                } else {
-                    p.classList.add("hidden");
-                }
-            });
-
-            // Back to list when navigating to archive view
-            if (targetId === "view-archive") {
-                showArchiveList();
+function initGlobalHeader() {
+    const globalInput = document.getElementById("global-search-input");
+    
+    // Global search redirection on Enter press
+    globalInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            const val = globalInput.value.trim();
+            if (val) {
+                window.location.href = `archive.html?q=${encodeURIComponent(val)}`;
             }
-        });
+        }
     });
 
-    document.getElementById("btn-goto-archive").addEventListener("click", () => {
-        document.querySelector('[data-target="view-archive"]').click();
-    });
-
-    document.getElementById("btn-goto-actions-tab").addEventListener("click", () => {
-        document.querySelector('[data-target="view-archive"]').click();
-    });
-
-    document.getElementById("btn-tour-start").addEventListener("click", () => {
-        document.querySelector('[data-target="view-dashboard"]').click();
+    // global Ctrl+K key binding
+    window.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+            e.preventDefault();
+            globalInput.focus();
+        }
     });
 }
 
 /* ====================================================
-   2. ROLE-BASED ACCESS CONTROL (RBAC)
+   ROLE-BASED ACCESS CONTROL (RBAC)
    ==================================================== */
 function initRoleController() {
     const roleBtn = document.getElementById("btn-role-toggle");
+    
+    syncRoleUI();
+
+    roleBtn.addEventListener("click", () => {
+        currentUserRole = currentUserRole === "Member" ? "Admin" : "Member";
+        saveStateToLocalStorage();
+        syncRoleUI();
+        pushToast(`User role toggled to: ${currentUserRole.toUpperCase()}`, "info");
+    });
+}
+
+function syncRoleUI() {
     const roleTxt = document.getElementById("current-role-txt");
-    const sidebarRole = document.getElementById("directory-user-role");
     const userRoleBadge = document.querySelector(".user-role-badge");
+    const directoryUserRole = document.getElementById("directory-user-role");
+    
     const auditOverlay = document.getElementById("audit-locked-overlay");
     const settingsOverlay = document.getElementById("settings-locked-overlay");
     const retentionInput = document.getElementById("settings-retention");
     const btnSaveRetention = document.getElementById("btn-save-retention");
 
-    roleBtn.addEventListener("click", () => {
-        currentUserRole = currentUserRole === "Member" ? "Admin" : "Member";
-        
-        // Update labels
-        roleTxt.textContent = currentUserRole.toUpperCase();
-        userRoleBadge.textContent = currentUserRole;
-        if (sidebarRole) sidebarRole.textContent = currentUserRole;
+    if (roleTxt) roleTxt.textContent = currentUserRole.toUpperCase();
+    if (userRoleBadge) userRoleBadge.textContent = currentUserRole;
+    if (directoryUserRole) directoryUserRole.textContent = currentUserRole;
 
-        pushToast(`User role toggled to: ${currentUserRole.toUpperCase()}`, "info");
+    const roleBtn = document.getElementById("btn-role-toggle");
+    if (!roleBtn) return;
 
-        // Toggle Lock Overlays
-        if (currentUserRole === "Admin") {
-            roleBtn.classList.add("active");
-            auditOverlay.style.display = "none";
-            settingsOverlay.style.display = "none";
-            retentionInput.disabled = false;
-            btnSaveRetention.disabled = false;
-        } else {
-            roleBtn.classList.remove("active");
-            auditOverlay.style.display = "flex";
-            settingsOverlay.style.display = "flex";
-            retentionInput.disabled = true;
-            btnSaveRetention.disabled = true;
-        }
-    });
-
-    btnSaveRetention.addEventListener("click", () => {
-        if (currentUserRole !== "Admin") return;
-        const days = retentionInput.value;
-        pushToast(`Data retention period saved to ${days} days!`, "success");
-        addNotification(`Data retention cycle policy adjusted to ${days} days.`);
-    });
+    if (currentUserRole === "Admin") {
+        roleBtn.classList.add("active");
+        if (auditOverlay) auditOverlay.style.display = "none";
+        if (settingsOverlay) settingsOverlay.style.display = "none";
+        if (retentionInput) retentionInput.disabled = false;
+        if (btnSaveRetention) btnSaveRetention.disabled = false;
+    } else {
+        roleBtn.classList.remove("active");
+        if (auditOverlay) auditOverlay.style.display = "flex";
+        if (settingsOverlay) settingsOverlay.style.display = "flex";
+        if (retentionInput) retentionInput.disabled = true;
+        if (btnSaveRetention) btnSaveRetention.disabled = true;
+    }
 }
 
 /* ====================================================
-   3. NOTIFICATIONS DRAWER CONTROLLER
+   NOTIFICATIONS SYSTEM
    ==================================================== */
 function initNotificationDrawer() {
     const bellBtn = document.getElementById("btn-notifications");
@@ -295,17 +301,21 @@ function initNotificationDrawer() {
     closeBtn.addEventListener("click", () => {
         drawer.classList.add("hidden");
     });
+    
+    renderNotificationList();
 }
 
 function addNotification(text) {
     notifications.push({ text: text, time: "Just now" });
+    saveStateToLocalStorage();
     renderNotificationList();
     const dot = document.getElementById("noti-dot");
-    dot.style.display = "block";
+    if (dot) dot.style.display = "block";
 }
 
 function renderNotificationList() {
     const list = document.getElementById("notification-list");
+    if (!list) return;
     if (notifications.length === 0) {
         list.innerHTML = `<p class="empty-noti">No new notifications.</p>`;
         return;
@@ -319,7 +329,120 @@ function renderNotificationList() {
 }
 
 /* ====================================================
-   4. LIVE MEETING DIALOG CAPTURE ENGINE
+   DASHBOARD INITIALIZER & RENDERERS
+   ==================================================== */
+function initDashboardView() {
+    updateTelemetry();
+    renderRecentMeetings();
+    renderAggregatedChecklist();
+    initPriorityTabs();
+}
+
+function updateTelemetry() {
+    const totalMeetings = meetings.length;
+    
+    const countEl = document.getElementById("stat-meetings-count");
+    const timeEl = document.getElementById("stat-time-saved");
+    const actionsEl = document.getElementById("stat-actions-pending");
+
+    if (countEl) countEl.textContent = totalMeetings;
+    if (timeEl) timeEl.textContent = `${(totalMeetings * 2.5).toFixed(1)} hrs`;
+
+    let totalPending = 0;
+    meetings.forEach(m => {
+        m.actionItems.forEach(a => {
+            if (a.status === "Pending") totalPending++;
+        });
+    });
+    if (actionsEl) actionsEl.textContent = totalPending;
+}
+
+function renderRecentMeetings() {
+    const list = [...meetings].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+    const tbody = document.getElementById("recent-meetings-table-body");
+    if (!tbody) return;
+
+    tbody.innerHTML = list.map(m => `
+        <tr onclick="window.location.href='archive.html?id=${m.id}'" style="cursor:pointer;">
+            <td><strong>📁 ${m.title}</strong></td>
+            <td>${m.date} • ${m.time || '10:00 AM'}</td>
+            <td>
+                <div class="avatars-group">
+                    ${m.participants.slice(0,3).map(p => `
+                        <div class="avatar-mini">${p.charAt(0)}</div>
+                    `).join("")}
+                    ${m.participants.length > 3 ? `<div class="avatar-mini">+${m.participants.length - 3}</div>` : ""}
+                </div>
+            </td>
+            <td><span class="badge ${m.status === 'Processing' ? 'amber' : 'green'}">${m.status || 'Analyzed'}</span></td>
+        </tr>
+    `).join("");
+}
+
+function initPriorityTabs() {
+    const pTabs = document.querySelectorAll(".p-tab");
+    pTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            pTabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            selectedPriority = tab.getAttribute("data-priority");
+            renderAggregatedChecklist();
+        });
+    });
+
+    const shortcutBtn = document.getElementById("btn-add-action-item-shortcut");
+    if (shortcutBtn) {
+        shortcutBtn.addEventListener("click", () => {
+            pushToast("Adding new action item... Feature loading.", "info");
+        });
+    }
+}
+
+function renderAggregatedChecklist() {
+    const box = document.getElementById("aggregated-checklist");
+    if (!box) return;
+    let itemsHtml = [];
+
+    meetings.forEach(m => {
+        m.actionItems.forEach((a, idx) => {
+            if (a.status === "Pending") {
+                const matchesPriority = (selectedPriority === "all" || a.priority === selectedPriority);
+                if (matchesPriority) {
+                    itemsHtml.push(`
+                        <div class="checklist-item">
+                            <input type="checkbox" onchange="toggleActionStatus('${m.id}', ${idx})">
+                            <div class="checklist-details">
+                                <span class="checklist-title">${a.task}</span>
+                                <span class="checklist-meta">Owner: <strong>${a.owner}</strong> | Due: ${a.deadline} | <span class="badge ${a.priority === 'high' ? 'red' : a.priority === 'medium' ? 'amber' : 'green'}">${a.priority}</span></span>
+                            </div>
+                        </div>
+                    `);
+                }
+            }
+        });
+    });
+
+    if (itemsHtml.length === 0) {
+        box.innerHTML = `<p class="empty-feed">No pending action items for this filter.</p>`;
+    } else {
+        box.innerHTML = itemsHtml.slice(0, 6).join("");
+    }
+}
+
+function toggleActionStatus(mtgId, actionIdx) {
+    const mtg = meetings.find(m => m.id === mtgId);
+    if (!mtg) return;
+    const a = mtg.actionItems[actionIdx];
+    a.status = a.status === "Completed" ? "Pending" : "Completed";
+    
+    saveStateToLocalStorage();
+    pushToast(`Action item status updated to: ${a.status.toUpperCase()}`, "info");
+    updateTelemetry();
+    renderAggregatedChecklist();
+}
+
+/* ====================================================
+   LIVE CAPTURE PAGE CONTROLLERS
    ==================================================== */
 function initLiveCapture() {
     const setupContainer = document.getElementById("live-setup-container");
@@ -397,7 +520,6 @@ function initLiveCapture() {
         transcriptFeed.appendChild(lineDiv);
         transcriptFeed.scrollTop = transcriptFeed.scrollHeight;
 
-        // Perform Rule-Based Keyword Extraction on message
         analyzeLiveMessage(speaker, content);
     }
 
@@ -479,29 +601,23 @@ function initLiveCapture() {
         
         currentLiveMeeting.summary = summaryText.trim();
         meetings.push(currentLiveMeeting);
+        saveStateToLocalStorage();
 
-        // Reset Form
         setupContainer.classList.remove("hidden");
         activeContainer.classList.add("hidden");
         document.getElementById("live-title").value = "";
         document.getElementById("live-participants").value = "";
 
-        // UI Telemetry updates
-        updateTelemetry();
-        renderRecentMeetings();
-        renderAggregatedChecklist();
-        initArchive(); 
-
         pushToast("Meeting Summary Saved to Archive!", "success");
         addNotification(`New live meeting notes compiled: ${currentLiveMeeting.title}`);
 
-        // Open details view
-        openMeetingDetails(currentLiveMeeting.id);
+        // Redirect directly to the details pane on archive page
+        window.location.href = `archive.html?id=${currentLiveMeeting.id}`;
     });
 }
 
 /* ====================================================
-   5. DRAG AND DROP DOCUMENT FILE UPLOAD PIPELINE
+   DOCUMENT UPLOAD CONTROLLERS
    ==================================================== */
 function initUploader() {
     const dropZone = document.getElementById("drop-zone");
@@ -686,26 +802,22 @@ function initUploader() {
         newMtg.summary = `## Executive Summary\n${firstSentences || "Document text successfully analyzed."}\n\n## Key Outcomes\nDynamic analysis run on uploaded file.`;
 
         meetings.push(newMtg);
+        saveStateToLocalStorage();
 
         setTimeout(() => {
             logContainer.classList.add("hidden");
-            updateTelemetry();
-            renderRecentMeetings();
-            renderAggregatedChecklist();
-            initArchive();
-
             pushToast("Dynamic document analysis complete!", "success");
             addNotification(`Uploaded file processed: ${filename}`);
 
-            openMeetingDetails(newMtg.id);
+            window.location.href = `archive.html?id=${newMtg.id}`;
         }, 800);
     }
 }
 
 /* ====================================================
-   6. ARCHIVE & MEETING TABS ACTIONS
+   MEETINGS ARCHIVE VIEW CONTROLLER
    ==================================================== */
-function initArchive() {
+function initArchiveView() {
     renderMeetingsGrid(meetings);
     initTabsNavigator();
 
@@ -718,25 +830,34 @@ function initArchive() {
         const mtg = meetings.find(m => m.id === id);
         if (mtg) exportMeetingToMarkdownFile(mtg);
     });
+
+    // Check query params for search keywords or direct target ID opening
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("q")) {
+        const q = urlParams.get("q");
+        document.getElementById("archive-search-input").value = q;
+        triggerFilter();
+    }
+    if (urlParams.has("id")) {
+        openMeetingDetails(urlParams.get("id"));
+    }
 }
 
-function renderMeetingsGrid(list) {
-    const grid = document.getElementById("meetings-grid-container");
-    if (list.length === 0) {
-        grid.innerHTML = `<p class="empty-feed">No meetings found matching parameters.</p>`;
-        return;
-    }
+function initTabsNavigator() {
+    const tabs = document.querySelectorAll(".tab-btn");
+    const panes = document.querySelectorAll(".tab-pane");
 
-    grid.innerHTML = list.map(m => `
-        <div class="meeting-card" onclick="openMeetingDetails('${m.id}')">
-            <div class="card-meta">
-                <span>📆 ${m.date}</span>
-                <span class="badge purple">${m.tags[0]}</span>
-            </div>
-            <h4>${m.title}</h4>
-            <p class="checklist-meta">${m.participants.length} participants | ${m.messages.length} messages</p>
-        </div>
-    `).join("");
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+
+            const targetPane = tab.getAttribute("data-tab");
+            panes.forEach(pane => {
+                pane.id === targetPane ? pane.classList.add("active") : pane.classList.remove("active");
+            });
+        });
+    });
 }
 
 function openMeetingDetails(id) {
@@ -747,10 +868,6 @@ function openMeetingDetails(id) {
     const detailsPanel = document.getElementById("archive-details-panel");
     detailsPanel.classList.remove("hidden");
     detailsPanel.setAttribute("data-active-id", id);
-
-    document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
-    document.querySelector('[data-target="view-archive"]').classList.add("active");
-    document.querySelectorAll(".view-panel").forEach(p => p.id === "view-archive" ? p.classList.remove("hidden") : p.classList.add("hidden"));
 
     document.getElementById("details-meeting-title").textContent = mtg.title;
     document.getElementById("details-meeting-date").textContent = `📆 ${mtg.date} • ${mtg.time || '10:00 AM'}`;
@@ -807,162 +924,55 @@ function openMeetingDetails(id) {
     });
 }
 
-function toggleActionStatus(mtgId, actionIdx) {
-    const mtg = meetings.find(m => m.id === mtgId);
-    if (!mtg) return;
-    const a = mtg.actionItems[actionIdx];
-    a.status = a.status === "Completed" ? "Pending" : "Completed";
-    
-    pushToast(`Action item status updated to: ${a.status.toUpperCase()}`, "info");
-    updateTelemetry();
-    renderAggregatedChecklist();
-}
-
 function showArchiveList() {
     document.getElementById("archive-list-panel").classList.remove("hidden");
     document.getElementById("archive-details-panel").classList.add("hidden");
     renderMeetingsGrid(meetings);
 }
 
-function initTabsNavigator() {
-    const tabs = document.querySelectorAll(".tab-btn");
-    const panes = document.querySelectorAll(".tab-pane");
-
-    tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            tabs.forEach(t => t.classList.remove("active"));
-            tab.classList.add("active");
-
-            const targetPane = tab.getAttribute("data-tab");
-            panes.forEach(pane => {
-                pane.id === targetPane ? pane.classList.add("active") : pane.classList.remove("active");
-            });
-        });
-    });
-}
-
-/* ====================================================
-   7. TELEMETRY WIDGETS AND FIGMA CARD UPDATER
-   ==================================================== */
-function updateTelemetry() {
-    const totalMeetings = meetings.length;
-    document.getElementById("stat-meetings-count").textContent = totalMeetings;
-    document.getElementById("stat-time-saved").textContent = `${(totalMeetings * 2.5).toFixed(1)} hrs`;
-
-    let totalPending = 0;
-    meetings.forEach(m => {
-        m.actionItems.forEach(a => {
-            if (a.status === "Pending") totalPending++;
-        });
-    });
-    document.getElementById("stat-actions-pending").textContent = totalPending;
-}
-
-function renderRecentMeetings() {
-    const list = [...meetings].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
-    const tbody = document.getElementById("recent-meetings-table-body");
-
-    tbody.innerHTML = list.map(m => `
-        <tr onclick="openMeetingDetails('${m.id}')" style="cursor:pointer;">
-            <td><strong>📁 ${m.title}</strong></td>
-            <td>${m.date} • ${m.time || '10:00 AM'}</td>
-            <td>
-                <div class="avatars-group">
-                    ${m.participants.slice(0,3).map(p => `
-                        <div class="avatar-mini">${p.charAt(0)}</div>
-                    `).join("")}
-                    ${m.participants.length > 3 ? `<div class="avatar-mini">+${m.participants.length - 3}</div>` : ""}
-                </div>
-            </td>
-            <td><span class="badge ${m.status === 'Processing' ? 'amber' : 'green'}">${m.status || 'Analyzed'}</span></td>
-        </tr>
-    `).join("");
-}
-
-function initPriorityTabs() {
-    const pTabs = document.querySelectorAll(".p-tab");
-    pTabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            pTabs.forEach(t => t.classList.remove("active"));
-            tab.classList.add("active");
-            selectedPriority = tab.getAttribute("data-priority");
-            renderAggregatedChecklist();
-        });
-    });
-
-    document.getElementById("btn-add-action-item-shortcut").addEventListener("click", () => {
-        pushToast("Adding new action item... Feature loading.", "info");
-    });
-}
-
-function renderAggregatedChecklist() {
-    const box = document.getElementById("aggregated-checklist");
-    let itemsHtml = [];
-
-    meetings.forEach(m => {
-        m.actionItems.forEach((a, idx) => {
-            if (a.status === "Pending") {
-                const matchesPriority = (selectedPriority === "all" || a.priority === selectedPriority);
-                if (matchesPriority) {
-                    itemsHtml.push(`
-                        <div class="checklist-item">
-                            <input type="checkbox" onchange="toggleActionStatus('${m.id}', ${idx})">
-                            <div class="checklist-details">
-                                <span class="checklist-title">${a.task}</span>
-                                <span class="checklist-meta">Owner: <strong>${a.owner}</strong> | Due: ${a.deadline} | <span class="badge ${a.priority === 'high' ? 'red' : a.priority === 'medium' ? 'amber' : 'green'}">${a.priority}</span></span>
-                            </div>
-                        </div>
-                    `);
-                }
-            }
-        });
-    });
-
-    if (itemsHtml.length === 0) {
-        box.innerHTML = `<p class="empty-feed">No pending action items for this filter.</p>`;
-    } else {
-        box.innerHTML = itemsHtml.slice(0, 6).join("");
-    }
-}
-
-/* ====================================================
-   8. FILTER SEARCH ENGINE
-   ==================================================== */
 function initSearch() {
-    const globalInput = document.getElementById("global-search-input");
     const archiveInput = document.getElementById("archive-search-input");
     const categorySelect = document.getElementById("archive-tag-filter");
 
-    globalInput.addEventListener("input", (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        if (query) {
-            document.querySelector('[data-target="view-archive"]').click();
-            archiveInput.value = query;
-            triggerFilter();
-        }
-    });
-
     archiveInput.addEventListener("input", triggerFilter);
     categorySelect.addEventListener("change", triggerFilter);
+}
 
-    function triggerFilter() {
-        const query = archiveInput.value.toLowerCase().trim();
-        const tag = categorySelect.value;
+function triggerFilter() {
+    const archiveInput = document.getElementById("archive-search-input");
+    const categorySelect = document.getElementById("archive-tag-filter");
+    if (!archiveInput) return;
 
-        const filtered = meetings.filter(m => {
-            const matchesQuery = m.title.toLowerCase().includes(query) || 
-                                 m.summary.toLowerCase().includes(query) ||
-                                 m.participants.some(p => p.toLowerCase().includes(query));
-            const matchesTag = (tag === "all" || m.tags.includes(tag));
-            return matchesQuery && matchesTag;
-        });
+    const query = archiveInput.value.toLowerCase().trim();
+    const tag = categorySelect.value;
 
-        renderMeetingsGrid(filtered);
-    }
+    const filtered = meetings.filter(m => {
+        const matchesQuery = m.title.toLowerCase().includes(query) || 
+                             m.summary.toLowerCase().includes(query) ||
+                             m.participants.some(p => p.toLowerCase().includes(query));
+        const matchesTag = (tag === "all" || m.tags.includes(tag));
+        return matchesQuery && matchesTag;
+    });
+
+    renderMeetingsGrid(filtered);
 }
 
 /* ====================================================
-   9. MARKDOWN EXPORTER
+   SETTINGS PAGE CONTROLLERS
+   ==================================================== */
+function initSettingsView() {
+    syncRoleUI();
+    
+    document.getElementById("btn-save-retention").addEventListener("click", () => {
+        if (currentUserRole !== "Admin") return;
+        const days = document.getElementById("settings-retention").value;
+        pushToast(`Data retention period saved to ${days} days!`, "success");
+        addNotification(`Data retention cycle policy adjusted to ${days} days.`);
+    });
+}
+
+/* ====================================================
+   MARKDOWN EXPORTER
    ==================================================== */
 function exportMeetingToMarkdownFile(meeting) {
     let md = `# ${meeting.title}\n\n`;
@@ -1014,10 +1024,11 @@ function exportMeetingToMarkdownFile(meeting) {
 }
 
 /* ====================================================
-   10. FLOATING TOAST POPUPS
+   TOAST POPUPS
    ==================================================== */
 function pushToast(message, type = "info") {
     const container = document.getElementById("toast-container");
+    if (!container) return;
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
     
