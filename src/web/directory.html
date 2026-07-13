@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <!-- Style Sheet -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -23,21 +25,21 @@
         <aside class="sidebar">
             <div class="sidebar-top-group">
                 <div class="sidebar-brand">
-                    <span class="ai-sparkle">🤖</span>
+                    <span class="ai-sparkle"><span class="material-symbols-outlined" style="font-size: 24px; color: var(--color-accent-purple);">smart_toy</span></span>
                     <h1>AI NOTES</h1>
                 </div>
                 
                 <nav class="sidebar-nav">
-                    <a href="dashboard.html" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
-                    <a href="live.html" class="nav-item"><span class="nav-icon">🎙️</span> Live Capture</a>
-                    <a href="upload.html" class="nav-item"><span class="nav-icon">📤</span> Upload File</a>
-                    <a href="archive.html" class="nav-item"><span class="nav-icon">📂</span> Meetings Archive</a>
-                    <a href="directory.html" class="nav-item active"><span class="nav-icon">👥</span> Workspace Directory</a>
-                    <a href="#" class="nav-item" id="btn-sidebar-assistant"><span class="nav-icon">✨</span> AI Assistant <span class="nav-new-chip">New</span></a>
-                    <a href="dashboard.html" class="nav-item"><span class="nav-icon">📈</span> Analytics</a>
-                    <a href="settings.html" class="nav-item"><span class="nav-icon">🔌</span> Integrations</a>
-                    <a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span> System Settings</a>
-                    <a href="onboarding.html" class="nav-item"><span class="nav-icon">📖</span> Onboarding Tour</a>
+                    <a href="dashboard.html" class="nav-item"><span class="material-symbols-outlined nav-icon">grid_view</span> Dashboard</a>
+                    <a href="live.html" class="nav-item"><span class="material-symbols-outlined nav-icon">mic</span> Live Capture</a>
+                    <a href="upload.html" class="nav-item"><span class="material-symbols-outlined nav-icon">cloud_upload</span> Upload File</a>
+                    <a href="archive.html" class="nav-item"><span class="material-symbols-outlined nav-icon">folder_open</span> Meetings Archive</a>
+                    <a href="directory.html" class="nav-item active"><span class="material-symbols-outlined nav-icon">group</span> Workspace Directory</a>
+                    <a href="#" class="nav-item" id="btn-sidebar-assistant"><span class="material-symbols-outlined nav-icon">auto_awesome</span> AI Assistant <span class="nav-new-chip">New</span></a>
+                    <a href="dashboard.html" class="nav-item"><span class="material-symbols-outlined nav-icon">monitoring</span> Analytics</a>
+                    <a href="settings.html" class="nav-item"><span class="material-symbols-outlined nav-icon">api</span> Integrations</a>
+                    <a href="settings.html" class="nav-item"><span class="material-symbols-outlined nav-icon">settings</span> System Settings</a>
+                    <a href="onboarding.html" class="nav-item"><span class="material-symbols-outlined nav-icon">explore</span> Onboarding Tour</a>
                 </nav>
             </div>
 
@@ -68,7 +70,7 @@
 
             <!-- AI Star FAB -->
             <button class="floating-ai-sparkle-btn" id="btn-assistant-quick" aria-label="Quick AI Assistant">
-                ✦
+                <span class="material-symbols-outlined">auto_awesome</span>
             </button>
         </aside>
 
@@ -78,14 +80,14 @@
             <!-- Top Header Bar -->
             <header class="top-bar">
                 <div class="search-container">
-                    <span class="search-icon">🔍</span>
+                    <span class="search-icon"><span class="material-symbols-outlined">search</span></span>
                     <input type="text" id="global-search-input" placeholder="Search meetings, keywords, participants... (Ctrl+K)...">
                     <span class="search-hint">⌘ K</span>
                 </div>
 
                 <div class="top-bar-actions">
                     <button class="top-btn" id="btn-notifications" aria-label="Notifications Drawer">
-                        🔔 <span class="notification-dot" id="noti-dot"></span>
+                        <span class="material-symbols-outlined" style="font-size: 20px;">notifications</span> <span class="notification-dot" id="noti-dot"></span>
                     </button>
                     <button class="top-btn role-toggle-btn" id="btn-role-toggle">
                         Active Role: <strong id="current-role-txt">MEMBER</strong>
@@ -165,7 +167,7 @@
                             
                             <!-- Locked Overlay dialog -->
                             <div class="locked-overlay" id="audit-locked-overlay">
-                                <span class="lock-icon">🔒</span>
+                                <span class="lock-icon"><span class="material-symbols-outlined" style="font-size: 32px; margin-bottom: 8px;">lock</span></span>
                                 <h4>Access Restricted to Administrator Role</h4>
                                 <p>Toggle active role to Admin in the top-right header to view compliance logs.</p>
                             </div>

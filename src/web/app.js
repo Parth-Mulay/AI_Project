@@ -364,7 +364,7 @@ function renderRecentMeetings() {
 
     tbody.innerHTML = list.map(m => `
         <tr onclick="window.location.href='archive.html?id=${m.id}'" style="cursor:pointer;">
-            <td><strong>📁 ${m.title}</strong></td>
+            <td><strong><span class="material-symbols-outlined" style="font-size: 16px; color: var(--color-accent-purple); vertical-align: -2px; margin-right: 4px;">folder</span> ${m.title}</strong></td>
             <td>${m.date} • ${m.time || '10:00 AM'}</td>
             <td>
                 <div class="avatars-group">
@@ -687,18 +687,20 @@ function initUploader() {
 
     function runProcessingStagesAnimation(filename, text) {
         const stages = [
-            { id: "stage-read", msg: "⏳ Reading document..." },
-            { id: "stage-extract", msg: "⏳ Extracting text..." },
-            { id: "stage-analyze", msg: "⏳ Analyzing meeting..." },
-            { id: "stage-summary", msg: "⏳ Generating summary..." },
-            { id: "stage-actions", msg: "⏳ Extracting action items..." },
-            { id: "stage-complete", msg: "⏳ Completed." }
+            { id: "stage-read", msg: "Reading document..." },
+            { id: "stage-extract", msg: "Extracting text..." },
+            { id: "stage-analyze", msg: "Analyzing meeting..." },
+            { id: "stage-summary", msg: "Generating summary..." },
+            { id: "stage-actions", msg: "Extracting action items..." },
+            { id: "stage-complete", msg: "Completed." }
         ];
 
         stages.forEach(s => {
             const el = document.getElementById(s.id);
-            el.className = "stage-item pending";
-            el.querySelector(".stage-indicator").textContent = "⏳";
+            if (el) {
+                el.className = "stage-item pending";
+                el.querySelector(".stage-indicator").innerHTML = `<span class="material-symbols-outlined">hourglass_empty</span>`;
+            }
         });
 
         document.getElementById("upload-status-badge").textContent = "Processing";
@@ -709,14 +711,18 @@ function initUploader() {
         function runNextStage() {
             if (currentStage > 0) {
                 const prev = document.getElementById(stages[currentStage - 1].id);
-                prev.className = "stage-item complete";
-                prev.querySelector(".stage-indicator").textContent = "✅";
+                if (prev) {
+                    prev.className = "stage-item complete";
+                    prev.querySelector(".stage-indicator").innerHTML = `<span class="material-symbols-outlined" style="color: var(--color-accent-green);">check_circle</span>`;
+                }
             }
 
             if (currentStage < stages.length) {
                 const active = document.getElementById(stages[currentStage].id);
-                active.className = "stage-item active";
-                active.querySelector(".stage-indicator").textContent = "🔄";
+                if (active) {
+                    active.className = "stage-item active";
+                    active.querySelector(".stage-indicator").innerHTML = `<span class="material-symbols-outlined animation-spin" style="color: var(--color-accent-purple);">sync</span>`;
+                }
                 currentStage++;
                 setTimeout(runNextStage, 300);
             } else {
@@ -860,6 +866,33 @@ function initTabsNavigator() {
     });
 }
 
+function renderMeetingsGrid(list) {
+    const container = document.getElementById("meetings-grid-container");
+    if (!container) return;
+
+    if (list.length === 0) {
+        container.innerHTML = `<p class="empty-feed">No meetings found matching the filters.</p>`;
+        return;
+    }
+
+    container.innerHTML = list.map(m => `
+        <div class="meeting-card" onclick="openMeetingDetails('${m.id}')">
+            <div class="card-header">
+                <h4><span class="material-symbols-outlined" style="font-size: 18px; color: var(--color-accent-purple); vertical-align: -2px; margin-right: 6px;">folder</span> ${m.title}</h4>
+                <span class="badge ${m.status === 'Processing' ? 'amber' : 'green'}">${m.status || 'Analyzed'}</span>
+            </div>
+            <div class="card-body">
+                <p class="meeting-card-excerpt">${m.summary.replace(/#+\s+.*/g, '').substring(0, 120)}...</p>
+            </div>
+            <div class="card-footer">
+                <span class="card-footer-item"><span class="material-symbols-outlined" style="font-size: 14px; vertical-align: -2px; margin-right: 4px;">calendar_today</span> ${m.date}</span>
+                <span class="card-footer-item"><span class="material-symbols-outlined" style="font-size: 14px; vertical-align: -2px; margin-right: 4px;">schedule</span> ${m.duration}</span>
+                <span class="card-footer-item"><span class="material-symbols-outlined" style="font-size: 14px; vertical-align: -2px; margin-right: 4px;">group</span> ${m.participants.length}</span>
+            </div>
+        </div>
+    `).join("");
+}
+
 function openMeetingDetails(id) {
     const mtg = meetings.find(m => m.id === id);
     if (!mtg) return;
@@ -870,9 +903,9 @@ function openMeetingDetails(id) {
     detailsPanel.setAttribute("data-active-id", id);
 
     document.getElementById("details-meeting-title").textContent = mtg.title;
-    document.getElementById("details-meeting-date").textContent = `📆 ${mtg.date} • ${mtg.time || '10:00 AM'}`;
-    document.getElementById("details-meeting-duration").textContent = `⏱️ ${mtg.duration}`;
-    document.getElementById("details-meeting-participants").textContent = `👥 ${mtg.participants.join(", ")}`;
+    document.getElementById("details-meeting-date").innerHTML = `<span class="material-symbols-outlined" style="font-size: 14px; margin-right: 4px; vertical-align: -2px;">calendar_today</span> ${mtg.date} • ${mtg.time || '10:00 AM'}`;
+    document.getElementById("details-meeting-duration").innerHTML = `<span class="material-symbols-outlined" style="font-size: 14px; margin-right: 4px; vertical-align: -2px;">schedule</span> ${mtg.duration}`;
+    document.getElementById("details-meeting-participants").innerHTML = `<span class="material-symbols-outlined" style="font-size: 14px; margin-right: 4px; vertical-align: -2px;">group</span> ${mtg.participants.join(", ")}`;
 
     let htmlSummary = mtg.summary
         .replace(/## (.*)/g, '<h3>$1</h3>')
