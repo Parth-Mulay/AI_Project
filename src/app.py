@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 from typing import Optional, List
 
-from models.meeting_model import Meeting, ActionItem, Decision, ImportantNote
+from .models.meeting_model import Meeting, ActionItem, Decision, ImportantNote
 from services.detection_service import DetectionService, SummarizationService
 from services.export_service import ExportService
 from utils.formatter import ConsoleFormatter, print_header, print_subheader, print_section, print_success, print_ai_insight
@@ -228,55 +228,31 @@ class MeetingNotesApp:
             raise ValueError(f"The document is corrupted or unreadable. Details: {e}")
 
     def _extract_text_from_docx(self, file_path: str) -> str:
-        """Extract text from docx using zipfile and xml parsing (no dependencies)."""
-        import zipfile
-        import xml.etree.ElementTree as ET
+        """Extract text from docx using python-docx."""
+        import docx
         try:
-            if not zipfile.is_zipfile(file_path):
-                raise ValueError("The document is corrupted or unreadable.")
-            with zipfile.ZipFile(file_path) as z:
-                if "word/document.xml" not in z.namelist():
-                    raise ValueError("The document is corrupted or not a valid Word file.")
-                try:
-                    xml_content = z.read("word/document.xml")
-                except RuntimeError as re_err:
-                    if "encrypted" in str(re_err).lower() or "password" in str(re_err).lower():
-                        raise ValueError("The document is password protected and cannot be read.")
-                    raise ValueError(f"The document is corrupted or unreadable. Details: {re_err}")
-                root = ET.fromstring(xml_content)
-                texts = []
-                for elem in root.iter():
-                    if elem.tag.endswith("}t") or elem.tag == "t":
-                        if elem.text:
-                            texts.append(elem.text)
-                extracted = " ".join(texts).strip()
-                if not extracted:
-                    raise ValueError("The document is empty.")
-                return extracted
+            doc = docx.Document(file_path)
+            paragraphs = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
+            extracted = "\n".join(paragraphs).strip()
+            if not extracted:
+                raise ValueError("The document is empty.")
+            return extracted
         except ValueError as ve:
             raise ve
         except Exception as e:
             raise ValueError(f"The document is corrupted or unreadable. Details: {e}")
 
     def _extract_text_from_pdf(self, file_path: str) -> str:
-        """Extract text from pdf using regex stream parsing (no dependencies)."""
-        import re
+        """Extract text from pdf using pdfplumber."""
+        import pdfplumber
         try:
-            with open(file_path, "rb") as f:
-                content = f.read()
-            if b"/Encrypt" in content or b"/encrypt" in content:
-                raise ValueError("The document is password protected and cannot be read.")
-            matches = re.findall(rb"\(([^)]*)\)", content)
-            texts = []
-            for m in matches:
-                try:
-                    text = m.decode("utf-8", errors="ignore")
-                    text = text.replace("\\(", "(").replace("\\)", ")")
-                    if text.strip():
-                        texts.append(text)
-                except Exception:
-                    pass
-            extracted = " ".join(texts).strip()
+            with pdfplumber.open(file_path) as pdf:
+                pages = []
+                for page in pdf.pages:
+                    text = page.extract_text()
+                    if text and text.strip():
+                        pages.append(text.strip())
+                extracted = "\n".join(pages).strip()
             if not extracted:
                 raise ValueError("The document is empty.")
             return extracted

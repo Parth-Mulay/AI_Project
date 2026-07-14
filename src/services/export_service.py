@@ -7,7 +7,7 @@ Supports Markdown export with professional formatting.
 import os
 from pathlib import Path
 from datetime import datetime
-from models.meeting_model import Meeting
+from ..models.meeting_model import Meeting
 
 
 class ExportService:

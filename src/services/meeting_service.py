@@ -8,7 +8,7 @@ business logic for meeting management, processing, and analysis.
 from datetime import datetime
 from typing import List, Optional
 
-from models.meeting import Meeting
+from ..models.meeting import Meeting
 from ai.summarizer import MeetingSummarizer
 from ai.action_items import ActionItemExtractor
 from utils.logger import app_logger
