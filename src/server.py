@@ -1,29 +1,41 @@
-# src/server.py
+﻿# src/server.py
 """FastAPI backend for AI Meeting Notes Manager.
 
 Serves REST API endpoints for uploading documents, retrieving meetings,
 and exporting markdown. Also serves static files from src/web/.
 """
-import os, sys
+
+from contextlib import asynccontextmanager
+import os
+import sys
 from typing import List
 
 # Add the project root to PYTHONPATH so absolute imports work when running this file directly
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from fastapi import FastAPI, HTTPException, UploadFile, File, Depends
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
 
 # Use absolute imports now that the root is on the path
-from src.models.meeting_model import Meeting
+from src.database import initialize_database
+from src.models.meeting_model import Attachment, Meeting
+from src.persistence import load_meetings, save_meetings
 from src.services.detection_service import DetectionService
 from src.services.export_service import ExportService
-from src.persistence import load_meetings, save_meetings
 
-app = FastAPI(title="AI Meeting Notes Manager API")
 
-# CORS – allow all origins for local development
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    """Initialize database tables when the FastAPI app starts."""
+    initialize_database()
+    yield
+
+
+app = FastAPI(title="AI Meeting Notes Manager API", lifespan=lifespan)
+
+# CORS - allow all origins for local development
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -36,16 +48,19 @@ app.add_middleware(
 static_path = os.path.join(os.path.dirname(__file__), "web")
 app.mount("/", StaticFiles(directory=static_path, html=True), name="static")
 
-# Dependency instances – singletons for the app lifetime
+# Dependency instances - singletons for the app lifetime
 _detection_service = DetectionService()
 _export_service = ExportService()
 
-# Helper to get current meetings list (in‑memory, persisted on each change)
+
+# Helper to get current meetings list (database-backed persistence)
 def get_meetings() -> List[Meeting]:
     return load_meetings()
 
+
 def persist(meetings: List[Meeting]) -> None:
     save_meetings(meetings)
+
 
 # -------------------- API ENDPOINTS --------------------
 
@@ -64,6 +79,7 @@ def list_meetings():
         for m in meetings
     ]
 
+
 @app.get("/api/v1/meetings/{meeting_id}", response_model=dict)
 def get_meeting(meeting_id: str):
     meetings = get_meetings()
@@ -71,6 +87,7 @@ def get_meeting(meeting_id: str):
         if m.id == meeting_id:
             return m.to_dict()
     raise HTTPException(status_code=404, detail="Meeting not found")
+
 
 @app.delete("/api/v1/meetings/{meeting_id}")
 def delete_meeting(meeting_id: str):
@@ -80,6 +97,7 @@ def delete_meeting(meeting_id: str):
         raise HTTPException(status_code=404, detail="Meeting not found")
     persist(filtered)
     return {"detail": "Meeting deleted"}
+
 
 @app.post("/api/v1/upload")
 async def upload_document(file: UploadFile = File(...)):
@@ -98,10 +116,10 @@ async def upload_document(file: UploadFile = File(...)):
 
     # Extract raw text using the same helpers from src/app.py
     from app import (
+        _extract_text_from_audio,
         _extract_text_from_docx,
         _extract_text_from_pdf,
         _extract_text_from_txt,
-        _extract_text_from_audio,
     )
 
     try:
@@ -119,6 +137,14 @@ async def upload_document(file: UploadFile = File(...)):
     # Create a meeting and run the NLP pipeline
     title = f"Uploaded Document - {os.path.basename(file.filename)}"
     meeting = Meeting(title, ["Unknown"])
+    meeting.add_attachment(
+        Attachment(
+            file_name=file.filename,
+            file_path=temp_path,
+            content_type=file.content_type,
+            file_size_bytes=len(content),
+        )
+    )
     _detection_service.analyze_document(meeting, raw_text)
 
     # Persist
@@ -136,6 +162,7 @@ async def upload_document(file: UploadFile = File(...)):
         "decisions": [d.to_dict() for d in meeting.decisions],
     }
 
+
 @app.get("/api/v1/meetings/{meeting_id}/export")
 def export_meeting(meeting_id: str):
     meetings = get_meetings()
@@ -148,14 +175,17 @@ def export_meeting(meeting_id: str):
                 raise HTTPException(status_code=500, detail=str(e))
     raise HTTPException(status_code=404, detail="Meeting not found")
 
+
 # Optional health check
 @app.get("/health")
 def health_check():
     return JSONResponse(content={"status": "ok"})
+
 
 # ------------------------------------------------------------------
 # Note: Running the server directly with `python -m uvicorn src.server:app`
 # or `python src/server.py` (the latter will invoke uvicorn automatically).
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="127.0.0.1", port=8000)

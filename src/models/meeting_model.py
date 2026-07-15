@@ -1,4 +1,4 @@
-"""
+﻿"""
 Data models for the Meeting Notes Manager prototype.
 
 Defines the core data structures used throughout the application.
@@ -123,6 +123,43 @@ class ImportantNote:
         }
 
 
+class Attachment:
+    """
+    Represents uploaded file metadata associated with a meeting.
+
+    Attributes:
+        file_name: Original file name
+        file_path: Stored file path
+        content_type: MIME type when known
+        file_size_bytes: File size in bytes
+        uploaded_at: When the file was uploaded
+    """
+
+    def __init__(
+        self,
+        file_name: str,
+        file_path: str,
+        content_type: Optional[str] = None,
+        file_size_bytes: Optional[int] = None,
+    ):
+        """Initialize an attachment."""
+        self.file_name = file_name
+        self.file_path = file_path
+        self.content_type = content_type
+        self.file_size_bytes = file_size_bytes
+        self.uploaded_at = datetime.now()
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "file_name": self.file_name,
+            "file_path": self.file_path,
+            "content_type": self.content_type,
+            "file_size_bytes": self.file_size_bytes,
+            "uploaded_at": self.uploaded_at.isoformat(),
+        }
+
+
 class Meeting:
     """
     Represents a meeting with all its components.
@@ -135,6 +172,7 @@ class Meeting:
         action_items: List of detected action items
         decisions: List of detected decisions
         important_notes: List of important notes
+        attachments: List of uploaded files associated with the meeting
         summary: Summary of the meeting
     """
 
@@ -148,6 +186,7 @@ class Meeting:
         self.action_items: List[ActionItem] = []
         self.decisions: List[Decision] = []
         self.important_notes: List[ImportantNote] = []
+        self.attachments: List[Attachment] = []
         self.summary = ""
         self.created_at = datetime.now()
         self.ended_at: Optional[datetime] = None
@@ -167,6 +206,10 @@ class Meeting:
     def add_important_note(self, note: ImportantNote) -> None:
         """Add an important note."""
         self.important_notes.append(note)
+
+    def add_attachment(self, attachment: Attachment) -> None:
+        """Add uploaded file metadata to the meeting."""
+        self.attachments.append(attachment)
 
     def get_duration(self) -> str:
         """Get the duration of the meeting."""
@@ -191,6 +234,7 @@ class Meeting:
             "action_items": [item.to_dict() for item in self.action_items],
             "decisions": [d.to_dict() for d in self.decisions],
             "important_notes": [n.to_dict() for n in self.important_notes],
+            "attachments": [attachment.to_dict() for attachment in self.attachments],
             "created_at": self.created_at.isoformat(),
             "ended_at": self.ended_at.isoformat() if self.ended_at else None,
             "duration": self.get_duration()
@@ -205,18 +249,18 @@ class Meeting:
         meeting = cls(title, participants)
         meeting.id = data.get("id", str(uuid.uuid4()))
         meeting.summary = data.get("summary", "")
-        
+
         if "created_at" in data:
             meeting.created_at = datetime.fromisoformat(data["created_at"])
         if "ended_at" in data and data["ended_at"]:
             meeting.ended_at = datetime.fromisoformat(data["ended_at"])
-            
+
         for m_data in data.get("messages", []):
             msg = Message(m_data["speaker"], m_data["content"])
             if "timestamp" in m_data:
                 msg.timestamp = datetime.fromisoformat(m_data["timestamp"])
             meeting.messages.append(msg)
-            
+
         for a_data in data.get("action_items", []):
             item = ActionItem(
                 description=a_data["description"],
@@ -226,7 +270,7 @@ class Meeting:
             if "timestamp" in a_data:
                 item.timestamp = datetime.fromisoformat(a_data["timestamp"])
             meeting.action_items.append(item)
-            
+
         for d_data in data.get("decisions", []):
             dec = Decision(
                 description=d_data["description"],
@@ -235,7 +279,7 @@ class Meeting:
             if "timestamp" in d_data:
                 dec.timestamp = datetime.fromisoformat(d_data["timestamp"])
             meeting.decisions.append(dec)
-            
+
         for n_data in data.get("important_notes", []):
             note = ImportantNote(
                 description=n_data["description"],
@@ -244,5 +288,16 @@ class Meeting:
             if "timestamp" in n_data:
                 note.timestamp = datetime.fromisoformat(n_data["timestamp"])
             meeting.important_notes.append(note)
-            
+
+        for attachment_data in data.get("attachments", []):
+            attachment = Attachment(
+                file_name=attachment_data["file_name"],
+                file_path=attachment_data["file_path"],
+                content_type=attachment_data.get("content_type"),
+                file_size_bytes=attachment_data.get("file_size_bytes"),
+            )
+            if "uploaded_at" in attachment_data:
+                attachment.uploaded_at = datetime.fromisoformat(attachment_data["uploaded_at"])
+            meeting.attachments.append(attachment)
+
         return meeting

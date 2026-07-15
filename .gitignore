@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+﻿# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -28,6 +28,7 @@ tmp/
 output/
 *.pdf
 *.docx
+*.db
 
 # Environment variables
 .env
