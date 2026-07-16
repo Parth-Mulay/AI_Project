@@ -8,6 +8,9 @@ import os
 from pathlib import Path
 from datetime import datetime
 from ..models.meeting_model import Meeting
+from backend.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class ExportService:
@@ -55,6 +58,7 @@ class ExportService:
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
 
+        logger.info("Exported meeting %s to %s", meeting.title, filepath)
         return filepath
 
     @staticmethod

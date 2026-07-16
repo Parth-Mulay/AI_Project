@@ -1,13 +1,13 @@
 # AI Meeting Notes Manager
 
-**Architecture Setup – Day 3 of a 14-Day AI Software Engineering Internship Capstone Project**
+**Architecture Setup – Day 11 of a 14-Day AI Software Engineering Internship Capstone Project**
 
 ## Project Overview
 
-The AI Meeting Notes Manager is an intelligent solution designed to help teams efficiently capture, organize, and extract insights from meeting recordings. This project demonstrates professional software architecture and clean coding practices with a focus on scalability and maintainability.
+The AI Meeting Notes Manager is an intelligent solution designed to help teams efficiently capture, organize, and extract insights from meeting recordings. This project demonstrates professional software architecture, resilient backend engineering, and modern AI integration practices with a strong fallback strategy.
 
-**Current Phase:** Frontend component development (Day 7)
-**Status:** ✅ Complete - Day 7 React Frontend Components & Learning Docs Done
+**Current Phase:** Backend resilience, AI integration, and documentation (Day 11)
+**Status:** ✅ Complete through Day 11 with verified backend regressions, structured logging, and optional AI summarization support
 
 
 ---
@@ -427,6 +427,64 @@ npm run dev
 
 ---
 
+## Day 8 – Backend and Frontend Integration
+
+The eighth phase focused on wiring the prototype UI to the FastAPI backend, introducing a service layer, global application state, and verified frontend-backend communication.
+
+### Highlights
+- React/Vite frontend connected to FastAPI endpoints
+- Routing and reusable UI state management added
+- Upload, meeting detail, analytics, and team views integrated
+- Production build and lint verification completed
+
+### Documentation
+- [Day 8 Implementation Summary](Day8_Docs/Day8_Implementation.md)
+
+---
+
+## Day 9 – Database Design and Persistence
+
+The ninth phase focused on replacing file-only persistence with a relational SQLAlchemy-backed database model for meetings, transcripts, participants, action items, decisions, risks, and attachments.
+
+### Highlights
+- SQLite-backed persistence added for structured meeting data
+- Normalized schema for transcripts and insights
+- Relationships and indexing strategy defined for future growth
+
+### Documentation
+- [Day 9 Database Design](Day9_Docs/03_Database_Design.md)
+
+---
+
+## Day 10 – AI Architecture and Prompt Engineering
+
+The tenth phase introduced an optional AI layer that complements the existing rule-based analysis engine rather than replacing it. The architecture now supports provider abstraction, prompt templates, lightweight RAG, guardrails, and cost estimation.
+
+### Highlights
+- Provider-based LLM abstraction added for future model backends
+- Reusable prompt files for summarization, action extraction, and decisions
+- Lightweight local RAG pipeline for context retrieval
+- Basic guardrails and safe fallback behavior implemented
+
+### Documentation
+- [Day 10 AI Architecture Notes](Day10_Docs/README.md)
+
+---
+
+## Day 11 – Debugging, Logging, and Resilience
+
+The eleventh phase focused on hardening the backend by fixing real regressions, stabilizing imports and uploads, improving logging, and verifying the application with automated tests.
+
+### Highlights
+- Import handling and upload endpoint stability improved
+- Structured logging introduced for better troubleshooting
+- Regression tests added for backend reliability
+- Documentation created for reproducing and verifying fixes
+
+### Documentation
+- [Day 11 Documentation](Day11_Docs/README.md)
+
+---
 
 ## Future Roadmap
 
@@ -473,8 +531,8 @@ This project adheres to the following standards:
 
 **Project Type**: AI Software Engineering Capstone
 **Duration**: 14 Days
-**Phase**: 5/14 (UI/UX Prototyping)
-**Timeline**: Days 1-5 Complete, Days 6-14 Upcoming
+**Phase**: 11/14 (Implementation, AI Integration, and Resilience)
+**Timeline**: Days 1-11 Complete, Days 12-14 Upcoming
 
 ---
 
