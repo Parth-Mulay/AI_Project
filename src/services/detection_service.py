@@ -7,6 +7,8 @@ Handles detection of insights and generation of summaries.
 from typing import List, Set
 from ..models.meeting_model import Meeting, ActionItem, Decision, ImportantNote, Message
 from ..utils.keyword_detector import KeywordDetector
+from backend.ai.llm_service import AISummaryService
+from backend.ai.rag import LocalRagPipeline
 from backend.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -177,21 +179,30 @@ class SummarizationService:
         """
         Generate a summary of the meeting.
 
-        Extracts key points from messages containing important keywords.
+        Uses the existing rule-based summarizer by default and only consults the
+        AI service when it is available and useful.
         """
         if not meeting.messages:
             return "No meeting content to summarize."
 
-        # Extract key sentences
         key_sentences = SummarizationService._extract_key_sentences(meeting)
 
         if not key_sentences:
             return "Meeting conducted with focus on ongoing tasks and discussions."
 
-        # Create summary
         summary = "Key points discussed:\n\n"
         for i, sentence in enumerate(key_sentences, 1):
             summary += f"• {sentence}\n"
+
+        try:
+            join_text = "\n".join([message.content for message in meeting.messages if message.content])
+            if len(join_text) > 40:
+                service = AISummaryService()
+                result = service.generate_summary(join_text)
+                if result.get("source") == "llm":
+                    return result["summary"]
+        except Exception as exc:
+            logger.debug("AI summary unavailable, using fallback: %s", exc)
 
         return summary.strip()
 
