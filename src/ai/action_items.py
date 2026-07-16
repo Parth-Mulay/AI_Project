@@ -9,7 +9,7 @@ Future implementation will use AI to intelligently extract action items.
 """
 
 from typing import List, Dict
-from utils.logger import app_logger
+from ..utils.logger import app_logger
 
 
 class ActionItem:

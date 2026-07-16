@@ -7,20 +7,27 @@ downloaded on first use if not already present.
 """
 
 from typing import Optional
-import spacy
-from spacy.language import Language
+
+try:
+    import spacy
+    from spacy.language import Language
+except ImportError:  # pragma: no cover - optional dependency missing
+    spacy = None
+    Language = object
 
 _nlp: Optional[Language] = None
 
-def get_nlp() -> Language:
-    """Return a cached spaCy `Language` object.
 
-    The function lazily loads ``en_core_web_sm``. Subsequent calls reuse the
-    same model instance, which saves loading time and memory.
+def get_nlp() -> Optional[Language]:
+    """Return a cached spaCy `Language` object when available.
+
+    If spaCy or the English model is unavailable, return ``None`` so the
+    app can fall back to a lightweight rule-based flow.
     """
     global _nlp
-    if _nlp is None:
-        # Load the small English model; it will be downloaded automatically
-        # the first time if missing.
-        _nlp = spacy.load("en_core_web_sm")
+    if _nlp is None and spacy is not None:
+        try:
+            _nlp = spacy.load("en_core_web_sm")
+        except OSError:
+            _nlp = None
     return _nlp

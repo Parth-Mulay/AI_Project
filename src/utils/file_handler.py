@@ -10,7 +10,7 @@ import json
 from typing import Any, Dict
 from pathlib import Path
 
-from utils.logger import app_logger
+from .logger import app_logger
 
 
 def create_directory(directory_path: str) -> bool:

@@ -7,6 +7,9 @@ Handles detection of insights and generation of summaries.
 from typing import List, Set
 from ..models.meeting_model import Meeting, ActionItem, Decision, ImportantNote, Message
 from ..utils.keyword_detector import KeywordDetector
+from backend.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class DetectionService:
@@ -29,6 +32,7 @@ class DetectionService:
         Returns: {"type": "action" | "decision" | "note" | None, "content": str}
         """
         if not line.strip():
+            logger.debug("Skipped empty meeting line")
             return {"type": None, "content": ""}
 
         # Extract speaker and content
@@ -115,12 +119,13 @@ class DetectionService:
         """
         if not text.strip():
             meeting.summary = "Empty document."
+            logger.warning("Document analysis skipped because the text was empty")
             return
 
         from ..nlp.pipeline import MeetingNlpPipeline
         pipeline = MeetingNlpPipeline()
         
-        # Always run with debug_mode=True to output the Developer Debug Log (Step 14)
+        logger.info("Analyzing document for meeting %s", meeting.title)
         nlp_result = pipeline.process(text, debug_mode=True)
 
         # Clear existing meeting data to prevent caching / history bleed (Step 12)
@@ -156,8 +161,8 @@ class DetectionService:
                 category="risk"
             ))
 
-        # Set summary
         meeting.summary = nlp_result["summary"]
+        logger.info("Document analysis completed for %s", meeting.title)
 
 
 class SummarizationService:

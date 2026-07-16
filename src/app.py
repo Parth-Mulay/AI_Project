@@ -7,12 +7,15 @@ Orchestrates the meeting workflow, user interaction, and interactive dashboard m
 import os
 import sys
 from datetime import datetime
-from typing import Optional, List
+from typing import List
 
-from .models.meeting_model import Meeting, ActionItem, Decision, ImportantNote
-from services.detection_service import DetectionService, SummarizationService
-from services.export_service import ExportService
-from utils.formatter import ConsoleFormatter, print_header, print_subheader, print_section, print_success, print_ai_insight
+from .models.meeting_model import Meeting
+from .services.detection_service import DetectionService, SummarizationService
+from .services.export_service import ExportService
+from .utils.formatter import ConsoleFormatter, print_success, print_ai_insight
+from backend.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class MeetingNotesApp:
@@ -40,6 +43,7 @@ class MeetingNotesApp:
 
         # Seed initial meeting history data for a realistic SaaS UX
         self._seed_demo_data()
+        logger.info("MeetingNotesApp initialized")
 
     def _seed_demo_data(self) -> None:
         """Seed initial meetings in the history archive using meeting_model."""
@@ -65,6 +69,7 @@ class MeetingNotesApp:
         while True:
             self._display_dashboard_menu()
             choice = input("\nPlease select an option (1-9): ").strip()
+            logger.debug("Dashboard menu choice: %s", choice)
 
             if choice == "1":
                 self._start_new_meeting()
@@ -99,8 +104,10 @@ class MeetingNotesApp:
             print(ConsoleFormatter.color_text("\nOpening Professional Web Dashboard in your browser...", "green"))
             print(f"File URI: file://{web_path}")
             webbrowser.open("file://" + web_path)
+            logger.info("Opened web dashboard at %s", web_path)
         else:
             print(ConsoleFormatter.color_text(f"\n❌ Error: Web files not found at: {web_path}", "red"))
+            logger.warning("Web dashboard assets missing at %s", web_path)
         input("\nPress Enter to return to main menu...")
 
     def _display_dashboard_menu(self) -> None:
@@ -263,7 +270,7 @@ class MeetingNotesApp:
 
     def _extract_text_from_audio(self, file_path: str) -> str:
         """Transcribe and extract text from audio file."""
-        from audio.transcriber import AudioTranscriber
+        from .audio.transcriber import AudioTranscriber
         try:
             transcriber = AudioTranscriber()
             text = transcriber.transcribe(file_path)
@@ -285,12 +292,14 @@ class MeetingNotesApp:
         filepath = input("Enter path to file: ").strip().strip('"\'')
         if not filepath:
             print(ConsoleFormatter.color_text("Upload cancelled.", "red"))
+            logger.info("Upload cancelled by user")
             input("\nPress Enter to return to Dashboard...")
             return
 
         # 1. Validation Checks: Exist check
         if not os.path.exists(filepath):
             print(ConsoleFormatter.color_text(f"\n❌ Error: File not found at path '{filepath}'.", "red"))
+            logger.warning("Upload failed because file does not exist: %s", filepath)
             input("\nPress Enter to return to Dashboard...")
             return
 
@@ -300,6 +309,7 @@ class MeetingNotesApp:
         
         if extension not in allowed:
             print(ConsoleFormatter.color_text(f"\n❌ Error: Unsupported file format '{extension}'.", "red"))
+            logger.warning("Unsupported upload extension: %s", extension)
             print("Allowed formats are: .mp3, .wav, .docx, .pdf, .txt")
             input("\nPress Enter to return to Dashboard...")
             return
@@ -317,6 +327,7 @@ class MeetingNotesApp:
         max_limit_mb = 100.0 if is_audio else 10.0
         if file_size_mb > max_limit_mb:
             print(ConsoleFormatter.color_text(f"\n❌ Error: File size ({file_size_mb:.2f}MB) exceeds the limit of {max_limit_mb}MB.", "red"))
+            logger.warning("Upload size %s MB exceeds limit %s MB", round(file_size_mb, 2), max_limit_mb)
             input("\nPress Enter to return to Dashboard...")
             return
 
@@ -336,6 +347,7 @@ class MeetingNotesApp:
                 text = self._extract_text_from_audio(filepath)
         except ValueError as ve:
             print(ConsoleFormatter.color_text(f"\n❌ Error: {ve}", "red"))
+            logger.warning("Upload processing failed: %s", ve)
             input("\nPress Enter to return to Dashboard...")
             return
         except Exception as e:
@@ -360,6 +372,7 @@ class MeetingNotesApp:
         # Dynamic AI Pipeline Run
         self.detection_service.analyze_document(meeting, text)
         self.meetings.append(meeting)
+        logger.info("Processed uploaded meeting %s", meeting.title)
 
         print("🤖 [AI Processing] Completed.")
         time.sleep(0.1)
@@ -374,6 +387,7 @@ class MeetingNotesApp:
             print_success(f"Meeting notes exported to: {exp_path}")
         except Exception as e:
             print(f"Export failed: {e}")
+            logger.exception("Meeting export failed for %s", meeting.title)
             
         input("\nPress Enter to return to Dashboard...")
 

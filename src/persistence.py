@@ -82,13 +82,20 @@ def _ensure_participant(
         return None
 
     participant_key = normalized_name.casefold()
-    if participant_key not in participants_by_name:
-        participant = DbParticipant(name=normalized_name)
-        _apply_timestamps(participant, timestamp or db_meeting.started_at)
-        participants_by_name[participant_key] = participant
-        db_meeting.participants.append(participant)
+    if participant_key in participants_by_name:
+        return participants_by_name[participant_key]
 
-    return participants_by_name[participant_key]
+    for existing_participant in db_meeting.participants:
+        if existing_participant.name.casefold() == participant_key:
+            participants_by_name[participant_key] = existing_participant
+            return existing_participant
+
+    participant = DbParticipant(name=normalized_name)
+    _apply_timestamps(participant, timestamp or db_meeting.started_at)
+    participants_by_name[participant_key] = participant
+    db_meeting.participants.append(participant)
+
+    return participant
 
 
 def _legacy_meeting_to_orm(meeting: Meeting) -> DbMeeting:
@@ -286,6 +293,7 @@ def save_meetings(meetings: List[Meeting]) -> None:
             existing_meetings = db.query(DbMeeting).all()
             for existing_meeting in existing_meetings:
                 db.delete(existing_meeting)
+            db.flush()
 
             for meeting in meetings:
                 db.add(_legacy_meeting_to_orm(meeting))

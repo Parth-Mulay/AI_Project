@@ -9,9 +9,9 @@ from datetime import datetime
 from typing import List, Optional
 
 from ..models.meeting import Meeting
-from ai.summarizer import MeetingSummarizer
-from ai.action_items import ActionItemExtractor
-from utils.logger import app_logger
+from ..ai.summarizer import MeetingSummarizer
+from ..ai.action_items import ActionItemExtractor
+from ..utils.logger import app_logger
 
 
 class MeetingService:

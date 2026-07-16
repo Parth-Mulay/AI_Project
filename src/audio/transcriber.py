@@ -9,7 +9,7 @@ Future implementation will integrate speech-to-text APIs.
 """
 
 from typing import Optional
-from utils.logger import app_logger
+from ..utils.logger import app_logger
 
 
 class AudioTranscriber:

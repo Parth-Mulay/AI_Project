@@ -10,7 +10,10 @@ import logging.handlers
 import os
 from datetime import datetime
 
-from config import LOG_LEVEL, LOGS_DIR, PROJECT_NAME
+try:
+    from ..config import LOG_LEVEL, LOGS_DIR, PROJECT_NAME
+except ImportError:  # pragma: no cover - fallback for direct script execution
+    from config import LOG_LEVEL, LOGS_DIR, PROJECT_NAME
 
 
 def setup_logger(name: str = None) -> logging.Logger:

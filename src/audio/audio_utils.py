@@ -7,7 +7,7 @@ validation, and format conversion.
 
 import os
 from typing import Optional
-from utils.logger import app_logger
+from ..utils.logger import app_logger
 
 
 class AudioUtils:

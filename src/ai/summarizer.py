@@ -8,7 +8,7 @@ Current implementation contains placeholder methods.
 Future implementation will integrate with AI models.
 """
 
-from utils.logger import app_logger
+from ..utils.logger import app_logger
 
 
 class MeetingSummarizer:

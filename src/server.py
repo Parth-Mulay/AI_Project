@@ -44,13 +44,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve the static dashboard (src/web/index.html and assets)
-static_path = os.path.join(os.path.dirname(__file__), "web")
-app.mount("/", StaticFiles(directory=static_path, html=True), name="static")
-
 # Dependency instances - singletons for the app lifetime
 _detection_service = DetectionService()
 _export_service = ExportService()
+
+# Serve the static dashboard (src/web/index.html and assets)
+static_path = os.path.join(os.path.dirname(__file__), "web")
+app.mount("/static", StaticFiles(directory=static_path, html=True), name="static")
+
+# Serve root index for the web UI when requested directly.
+@app.get("/")
+def root() -> FileResponse:
+    return FileResponse(os.path.join(static_path, "index.html"))
 
 
 # Helper to get current meetings list (database-backed persistence)
@@ -115,22 +120,21 @@ async def upload_document(file: UploadFile = File(...)):
         out.write(content)
 
     # Extract raw text using the same helpers from src/app.py
-    from app import (
-        _extract_text_from_audio,
-        _extract_text_from_docx,
-        _extract_text_from_pdf,
-        _extract_text_from_txt,
+    from src.app import (
+        MeetingNotesApp,
     )
+
+    app_instance = MeetingNotesApp()
 
     try:
         if ext == ".docx":
-            raw_text = _extract_text_from_docx(temp_path)
+            raw_text = app_instance._extract_text_from_docx(temp_path)
         elif ext == ".pdf":
-            raw_text = _extract_text_from_pdf(temp_path)
+            raw_text = app_instance._extract_text_from_pdf(temp_path)
         elif ext == ".txt":
-            raw_text = _extract_text_from_txt(temp_path)
+            raw_text = app_instance._extract_text_from_txt(temp_path)
         else:  # audio
-            raw_text = _extract_text_from_audio(temp_path)
+            raw_text = app_instance._extract_text_from_audio(temp_path)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to extract text: {e}")
 

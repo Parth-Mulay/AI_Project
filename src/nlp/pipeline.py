@@ -9,10 +9,27 @@ completely offline without any hardcoded demo fallbacks.
 import re
 import datetime
 from typing import List, Dict, Any, Tuple
-import dateparser
+
+try:
+    import dateparser
+except ImportError:  # pragma: no cover - optional dependency missing
+    dateparser = None
+
+from backend.core.logging import get_logger
 from .spacy_loader import get_nlp
 from .text_cleaner import TextCleaner
 from .sentence_segmenter import SentenceSegmenter
+
+logger = get_logger(__name__)
+
+
+class _SimpleDoc:
+    """Fallback document wrapper used when spaCy is unavailable."""
+
+    def __init__(self, text: str):
+        self.text = text
+        self.ents = []
+
 
 class MeetingNlpPipeline:
     """Orchestrates the offline NLP analysis of meeting documents."""
@@ -21,6 +38,26 @@ class MeetingNlpPipeline:
         self.nlp = get_nlp()
         self.cleaner = TextCleaner()
         self.segmenter = SentenceSegmenter()
+
+    @staticmethod
+    def _parse_date(value: str):
+        """Parse a date string when dateparser is unavailable."""
+        if not value:
+            return None
+        if dateparser is not None:
+            try:
+                return dateparser.parse(value)
+            except Exception:
+                return None
+        try:
+            return datetime.datetime.strptime(value, "%Y-%m-%d")
+        except ValueError:
+            pass
+        try:
+            return datetime.datetime.strptime(value, "%m/%d/%Y")
+        except ValueError:
+            pass
+        return None
 
     def process(self, document_text: str, debug_mode: bool = False) -> Dict[str, Any]:
         """Process the raw document text and return structured meeting intelligence.
@@ -33,10 +70,13 @@ class MeetingNlpPipeline:
         # Step 2: Sentence Segmentation (Speaker-attributed)
         attributed_sentences = self.segmenter.segment(cleaned_text)
 
-        # Preprocess sentences with spaCy Doc objects
+        # Preprocess sentences with spaCy Doc objects when available.
         processed_sentences: List[Tuple[str, str, Any]] = []
         for speaker, sent in attributed_sentences:
-            doc = self.nlp(sent)
+            if self.nlp is None:
+                doc = _SimpleDoc(sent)
+            else:
+                doc = self.nlp(sent)
             processed_sentences.append((speaker, sent, doc))
 
         # Character/Paragraph metrics
@@ -134,7 +174,7 @@ class MeetingNlpPipeline:
         for line in lines[:10]:
             match = date_pattern.search(line)
             if match:
-                parsed_dt = dateparser.parse(match.group(0))
+                parsed_dt = self._parse_date(match.group(0))
                 if parsed_dt:
                     found_date = parsed_dt.date()
                     break
@@ -231,7 +271,7 @@ class MeetingNlpPipeline:
                 deadline_match = re.search(r'(?i)(?:by|before|due|deadline)\s+([A-Za-z0-9\s\-]{2,25}?)(?:\.|$|,|\s+and)', raw_sent)
                 if deadline_match:
                     deadline_str = deadline_match.group(1).strip()
-                    parsed_dt = dateparser.parse(deadline_str)
+                    parsed_dt = self._parse_date(deadline_str)
                     if parsed_dt:
                         deadline = parsed_dt.strftime("%Y-%m-%d")
                     else:
@@ -394,20 +434,18 @@ class MeetingNlpPipeline:
 
     def _print_developer_debug(self, data: Dict[str, Any], raw_text: str) -> None:
         """Print detailed developer debug mode logs."""
-        print("\n" + "="*50)
-        print("         DEVELOPER DEBUG LOG MODE")
-        print("="*50)
-        print(f" Loaded File           : [Document Upload]")
-        print(f" Detected Title        : {data['title']}")
-        print(f" Detected Date         : {data['date']}")
-        print(f" Detected Participants : {', '.join(data['participants'])}")
-        print(f" Paragraph Count       : {data['statistics']['paragraph_count']}")
-        print(f" Sentence Count        : {data['statistics']['sentence_count']}")
-        print(f" Extracted Text Length : {data['statistics']['extracted_text_length']} chars")
-        print(f" Action Items Count    : {data['statistics']['action_items_count']}")
-        print(f" Decision Count        : {data['statistics']['decision_count']}")
-        print(f" Risk Count            : {data['statistics']['risk_count']}")
-        print(f" Deadline Count        : {data['statistics']['deadline_count']}")
-        print(f" Departments Extracted : {', '.join(data['departments'])}")
-        print(f" Organizations Ext.    : {', '.join(data['organizations'])}")
-        print("="*50 + "\n")
+        logger.info(
+            "Developer debug mode for document analysis: title=%s participants=%s",
+            data["title"],
+            ", ".join(data["participants"]),
+        )
+        logger.debug(
+            "Document stats: paragraphs=%s sentences=%s extracted_length=%s action_items=%s decisions=%s risks=%s deadlines=%s",
+            data["statistics"]["paragraph_count"],
+            data["statistics"]["sentence_count"],
+            data["statistics"]["extracted_text_length"],
+            data["statistics"]["action_items_count"],
+            data["statistics"]["decision_count"],
+            data["statistics"]["risk_count"],
+            data["statistics"]["deadline_count"],
+        )
