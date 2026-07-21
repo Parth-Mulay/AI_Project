@@ -102,12 +102,23 @@ AI-Meeting-Notes-Manager/
 │       ├── logger.py              # Logging configuration
 │       └── file_handler.py        # File operations
 │
-├── tests/                         # Test suite
-│   └── test_structure.py          # Architecture tests
+├── tests/                         # Multi-layer test suite (218+ tests)
+│   ├── unit/                      # Unit tests for models, services, AI, utils
+│   ├── integration/               # Integration tests for APIs & DB persistence
+│   └── e2e/                       # End-to-end user journey test suite
 │
-├── Day3_Docs/                     # Day 3 documentation
-├── Day1_Docs/                     # Day 1 artifacts
-├── Day2_Docs/                     # Day 2 artifacts
+├── Day12_Docs/                    # Day 12 QA & Testing artifacts
+├── Day11_Docs/                    # Day 11 resilience & debugging artifacts
+├── Day10_Docs/                    # Day 10 AI architecture artifacts
+├── Day9_Docs/                     # Day 9 database design artifacts
+├── Day8_Docs/                     # Day 8 integration artifacts
+├── Day7_Docs/                     # Day 7 frontend react artifacts
+├── Day6_Docs/                     # Day 6 proposal & sign-off artifacts
+├── Day5_Docs/                     # Day 5 prototyping & UI artifacts
+├── Day4_Docs/                     # Day 4 requirements & PRD artifacts
+├── Day3_Docs/                     # Day 3 product thinking artifacts
+├── Day2_Docs/                     # Day 2 AI-assisted dev artifacts
+├── Day1_Docs/                     # Day 1 discovery artifacts
 │
 ├── requirements.txt               # Python dependencies
 ├── README.md                      # This file
@@ -483,6 +494,26 @@ The eleventh phase focused on hardening the backend by fixing real regressions, 
 
 ### Documentation
 - [Day 11 Documentation](Day11_Docs/README.md)
+
+---
+
+## Day 12 – Quality Assurance, Testing, and Security Review
+
+The twelfth phase focused on establishing a comprehensive quality assurance framework, building unit, integration, and end-to-end test suites (218+ tests), running security audit scans, completing exploratory testing, validating performance, and conducting User Acceptance Testing (UAT).
+
+### Highlights
+- Built comprehensive multi-layer test suite across unit, integration, and E2E layers (218+ passing tests)
+- Evaluated API endpoints, database persistence, and document export services
+- Performed exploratory testing and generated UAT validation checklist
+- Executed security audit and vulnerability assessment report
+- Standardized test fixtures, mocks, and configuration via pytest
+
+### Documentation
+- [Day 12 QA & Testing Overview](Day12_Docs/README.md)
+- [01 Exploratory Test Report](Day12_Docs/01_Exploratory_Test_Report.md)
+- [02 UAT Checklist](Day12_Docs/02_UAT_Checklist.md)
+- [03 Security Test Report](Day12_Docs/03_Security_Test_Report.md)
+- [04 Performance Test Report](Day12_Docs/04_Performance_Test_Report.md)
 
 ---
 
