@@ -1,13 +1,13 @@
 # AI Meeting Notes Manager
 
-**Quality Assurance & Testing – Day 12 of a 14-Day AI Software Engineering Internship Capstone Project**
+**Deployment & DevOps Architecture – Day 13 of a 14-Day AI Software Engineering Internship Capstone Project**
 
 ## Project Overview
 
-The AI Meeting Notes Manager is an intelligent solution designed to help teams efficiently capture, organize, and extract insights from meeting recordings. This project demonstrates professional software architecture, resilient backend engineering, comprehensive quality assurance testing, and security review.
+The AI Meeting Notes Manager is an intelligent solution designed to help teams efficiently capture, organize, and extract insights from meeting recordings. This project demonstrates professional software architecture, resilient backend engineering, multi-layer quality testing, and a zero-cost cloud deployment strategy (Vercel, Render, GitHub Actions, UptimeRobot).
 
-**Current Phase:** Quality Assurance, Testing, Security Review & QA Documentation (Day 12)
-**Status:** ✅ Complete through Day 12 with full test suite (218+ pytest tests), UAT validation, security report, and performance benchmarks
+**Current Phase:** Deployment, CI/CD, Monitoring & Zero-Cost Cloud Architecture (Day 13)
+**Status:** ✅ Complete through Day 13 with automated GitHub Actions CI/CD pipeline, Render blueprint config, Vercel SPA deployment config, UptimeRobot monitoring, incident rollback guides, and $0.00/mo cost report
 
 
 ---
@@ -102,11 +102,20 @@ AI-Meeting-Notes-Manager/
 │       ├── logger.py              # Logging configuration
 │       └── file_handler.py        # File operations
 │
+├── .github/workflows/             # CI/CD Automation
+│   └── ci.yml                     # GitHub Actions Pytest & Vite build pipeline
+│
+├── render.yaml                    # Render Blueprint Infrastructure-as-Code config
+├── frontend/vercel.json           # Vercel SPA deployment config
+├── .env.example                   # Backend environment template
+├── frontend/.env.example          # Frontend environment template
+│
 ├── tests/                         # Multi-layer test suite (218+ tests)
 │   ├── unit/                      # Unit tests for models, services, AI, utils
 │   ├── integration/               # Integration tests for APIs & DB persistence
 │   └── e2e/                       # End-to-end user journey test suite
 │
+├── Day13_Docs/                    # Day 13 Deployment & DevOps artifacts
 ├── Day12_Docs/                    # Day 12 QA & Testing artifacts
 ├── Day11_Docs/                    # Day 11 resilience & debugging artifacts
 ├── Day10_Docs/                    # Day 10 AI architecture artifacts
@@ -517,6 +526,29 @@ The twelfth phase focused on establishing a comprehensive quality assurance fram
 
 ---
 
+## Day 13 – Deployment & DevOps Architecture
+
+The thirteenth phase focused on establishing a production-grade, zero-cost DevOps deployment strategy leveraging Vercel Free (Frontend), Render Free (Backend), GitHub Actions (CI/CD), UptimeRobot (Monitoring), and structured logging.
+
+### Highlights
+- Automated CI/CD pipeline (`.github/workflows/ci.yml`) for pytest suite & Vite frontend build verification
+- Created Render Blueprint (`render.yaml`) for FastAPI backend startup and automated health checks
+- Configured Vercel deployment (`frontend/vercel.json`) with SPA route rewrites
+- Added HTTP request logging middleware and configurable CORS origins
+- Configured UptimeRobot 5-minute health check monitor targeting `/health`
+- Documented Incident Response & Rollback strategy (`Day13_Docs/04_Rollback_Guide.md`)
+- Calculated $0.00/month operating cost report across free tier providers
+
+### Documentation
+- [Day 13 DevOps Overview](Day13_Docs/README.md)
+- [01 Environment Strategy](Day13_Docs/01_Environments.md)
+- [02 Environment Variables](Day13_Docs/02_Environment_Variables.md)
+- [03 Logging & Monitoring](Day13_Docs/03_Logging_and_Monitoring.md)
+- [04 Incident Response & Rollback Guide](Day13_Docs/04_Rollback_Guide.md)
+- [05 Monthly Cost Estimation](Day13_Docs/05_Cost_Estimation.md)
+
+---
+
 ## Future Roadmap
 
 ### Phase 2: Core Implementation
@@ -562,8 +594,8 @@ This project adheres to the following standards:
 
 **Project Type**: AI Software Engineering Capstone
 **Duration**: 14 Days
-**Phase**: 12/14 (Quality Assurance, Testing & Security Review)
-**Timeline**: Days 1-12 Complete, Days 13-14 Upcoming
+**Phase**: 13/14 (Deployment, CI/CD & DevOps Architecture)
+**Timeline**: Days 1-13 Complete, Day 14 Upcoming
 
 ---
 
@@ -601,10 +633,11 @@ This is a capstone project. Contributions and feedback are welcome!
 ## Support
 
 For questions or issues, please refer to:
+- Deployment & DevOps Documentation: [Day13_Docs/](Day13_Docs/)
 - QA & Testing Documentation: [Day12_Docs/](Day12_Docs/)
 - Previous Phases: [Day11_Docs/](Day11_Docs/), [Day10_Docs/](Day10_Docs/), [Day9_Docs/](Day9_Docs/)
 
 ---
 
 **Last Updated**: 2026
-**Status**: Quality Assurance & Testing Phase Complete ✅
+**Status**: Deployment & DevOps Architecture Complete ✅

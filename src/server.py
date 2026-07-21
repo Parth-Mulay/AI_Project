@@ -1,4 +1,4 @@
-﻿# src/server.py
+# src/server.py
 """FastAPI backend for AI Meeting Notes Manager.
 
 Serves REST API endpoints for uploading documents, retrieving meetings,
@@ -8,12 +8,13 @@ and exporting markdown. Also serves static files from src/web/.
 from contextlib import asynccontextmanager
 import os
 import sys
+import time
 from typing import List
 
 # Add the project root to PYTHONPATH so absolute imports work when running this file directly
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -24,6 +25,7 @@ from src.models.meeting_model import Attachment, Meeting
 from src.persistence import load_meetings, save_meetings
 from src.services.detection_service import DetectionService
 from src.services.export_service import ExportService
+from backend.core.logging import app_logger
 
 
 @asynccontextmanager
@@ -35,10 +37,24 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="AI Meeting Notes Manager API", lifespan=lifespan)
 
-# CORS - allow all origins for local development
+# HTTP Request Logging Middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    duration_ms = (time.time() - start_time) * 1000
+    app_logger.info(
+        f"{request.method} {request.url.path} - Status: {response.status_code} - {duration_ms:.2f}ms"
+    )
+    return response
+
+# CORS - allow configured origins or default to all origins
+cors_origins_str = os.getenv("CORS_ORIGINS", "*")
+cors_origins = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins if cors_origins else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
