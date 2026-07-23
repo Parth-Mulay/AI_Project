@@ -7,8 +7,10 @@ Run with: python src/main.py
 import os
 import sys
 
-# Add src directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
+# Add project root directory to path for imports
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 from src.app import MeetingNotesApp
 from backend.core.logging import get_logger

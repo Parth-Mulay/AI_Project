@@ -4,6 +4,10 @@ Service for processing and analyzing meeting content.
 Handles detection of insights and generation of summaries.
 """
 
+import hashlib
+import copy
+import threading
+from collections import OrderedDict
 from typing import List, Set
 from ..models.meeting_model import Meeting, ActionItem, Decision, ImportantNote, Message
 from ..utils.keyword_detector import KeywordDetector
@@ -21,9 +25,13 @@ class DetectionService:
     Uses rule-based keyword matching to identify action items, decisions, and notes.
     """
 
+    _MAX_CACHE_SIZE = 100
+
     def __init__(self):
         """Initialize the detection service."""
         self.detected_insights = {"actions": [], "decisions": [], "notes": []}
+        self._analysis_cache = OrderedDict()
+        self._cache_lock = threading.Lock()
 
     def process_message(self, meeting: Meeting, line: str) -> dict:
         """
@@ -112,6 +120,23 @@ class DetectionService:
                 return True
         return False
 
+    def _get_cache_key(self, text: str) -> str:
+        return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+    def _get_cached_result(self, cache_key: str):
+        with self._cache_lock:
+            if cache_key in self._analysis_cache:
+                self._analysis_cache.move_to_end(cache_key)
+                logger.debug("Analysis cache hit for key %s", cache_key[:12])
+                return copy.deepcopy(self._analysis_cache[cache_key])
+            return None
+
+    def _set_cached_result(self, cache_key: str, result: dict) -> None:
+        with self._cache_lock:
+            self._analysis_cache[cache_key] = copy.deepcopy(result)
+            if len(self._analysis_cache) > self._MAX_CACHE_SIZE:
+                self._analysis_cache.popitem(last=False)
+
     def analyze_document(self, meeting: Meeting, text: str) -> None:
         """
         Analyze the full text of an uploaded document using the advanced NLP pipeline.
@@ -124,11 +149,17 @@ class DetectionService:
             logger.warning("Document analysis skipped because the text was empty")
             return
 
-        from ..nlp.pipeline import MeetingNlpPipeline
-        pipeline = MeetingNlpPipeline()
-        
-        logger.info("Analyzing document for meeting %s", meeting.title)
-        nlp_result = pipeline.process(text, debug_mode=True)
+        cache_key = self._get_cache_key(text)
+        cached = self._get_cached_result(cache_key)
+        if cached is not None:
+            logger.info("Using cached analysis result for %s", meeting.title)
+            nlp_result = cached
+        else:
+            from ..nlp.pipeline import MeetingNlpPipeline
+            pipeline = MeetingNlpPipeline()
+            logger.info("Analyzing document for meeting %s", meeting.title)
+            nlp_result = pipeline.process(text, debug_mode=True)
+            self._set_cached_result(cache_key, nlp_result)
 
         # Clear existing meeting data to prevent caching / history bleed (Step 12)
         meeting.participants = nlp_result["participants"]
@@ -174,6 +205,23 @@ class SummarizationService:
     Uses rule-based approach to extract key points.
     """
 
+    _MAX_CHARS = 5000
+
+    @staticmethod
+    def _truncate_text(text: str, max_chars: int = None) -> str:
+        if max_chars is None:
+            max_chars = SummarizationService._MAX_CHARS
+        if len(text) <= max_chars:
+            return text
+        truncated = text[:max_chars]
+        last_period = truncated.rfind(".")
+        if last_period > max_chars // 2:
+            return text[: last_period + 1]
+        last_space = truncated.rfind(" ")
+        if last_space > max_chars // 2:
+            return text[:last_space]
+        return truncated
+
     @staticmethod
     def generate_summary(meeting: Meeting) -> str:
         """
@@ -196,6 +244,7 @@ class SummarizationService:
 
         try:
             join_text = "\n".join([message.content for message in meeting.messages if message.content])
+            join_text = SummarizationService._truncate_text(join_text)
             if len(join_text) > 40:
                 service = AISummaryService()
                 result = service.generate_summary(join_text)

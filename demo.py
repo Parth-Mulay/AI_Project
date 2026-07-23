@@ -10,13 +10,13 @@ import sys
 import os
 from datetime import datetime
 
-# Add src directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+# Add project root directory to path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from models.meeting_model import Meeting
-from services.detection_service import DetectionService, SummarizationService
-from services.export_service import ExportService
-from utils.formatter import ConsoleFormatter, print_header, print_subheader, print_section, print_success, print_ai_insight
+from src.models.meeting_model import Meeting
+from src.services.detection_service import DetectionService, SummarizationService
+from src.services.export_service import ExportService
+from src.utils.formatter import ConsoleFormatter, print_header, print_subheader, print_section, print_success, print_ai_insight
 
 
 def run_demo():

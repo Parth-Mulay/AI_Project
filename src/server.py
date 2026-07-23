@@ -25,6 +25,7 @@ from src.models.meeting_model import Attachment, Meeting
 from src.persistence import load_meetings, save_meetings
 from src.services.detection_service import DetectionService
 from src.services.export_service import ExportService
+from src.agents import MultiAgentOrchestrator
 from backend.core.logging import app_logger
 
 

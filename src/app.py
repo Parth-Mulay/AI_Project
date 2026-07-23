@@ -9,10 +9,21 @@ import sys
 from datetime import datetime
 from typing import List
 
-from .models.meeting_model import Meeting
-from .services.detection_service import DetectionService, SummarizationService
-from .services.export_service import ExportService
-from .utils.formatter import ConsoleFormatter, print_success, print_ai_insight
+# Add project root directory to sys.path for direct script execution
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+try:
+    from .models.meeting_model import Meeting
+    from .services.detection_service import DetectionService, SummarizationService
+    from .services.export_service import ExportService
+    from .utils.formatter import ConsoleFormatter, print_success, print_ai_insight
+except ImportError:
+    from src.models.meeting_model import Meeting
+    from src.services.detection_service import DetectionService, SummarizationService
+    from src.services.export_service import ExportService
+    from src.utils.formatter import ConsoleFormatter, print_success, print_ai_insight
 from backend.core.logging import get_logger
 
 logger = get_logger(__name__)
